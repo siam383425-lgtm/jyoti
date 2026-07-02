@@ -3,200 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jyoti's Universe</title>
+    <title>Jyoti's iOS Universe</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Anek+Bangla:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ===== Global App Setup ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; user-select: none; }
+        /* ===== Global Setup & Responsive ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body {
             background: #000;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow: hidden;
+            height: 100vh; overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'Anek Bangla', 'Outfit', sans-serif;
             color: #fff;
         }
 
-        /* Phone Container (For Desktop view scaling) */
         .app-container {
             position: relative; width: 100vw; height: 100vh; max-width: 430px; 
-            background: linear-gradient(135deg, #130a1e, #31133f, #1b0c2e);
-            overflow: hidden; box-shadow: 0 0 50px rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, #1e152a, #2a1b38, #160d24);
+            overflow: hidden;
         }
 
-        /* ===== iOS Glassmorphism ===== */
-        .glass { background: rgba(255, 255, 255, 0.08); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        /* ===== iOS Glassmorphism (Transparent System) ===== */
+        .ios-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ios-glass-dark {
+            background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
         /* ===== Emojis & FX ===== */
-        .ios-emoji { width: 1.2em; height: 1.2em; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
-        
-        .floating-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+        .ios-emoji { width: clamp(1.2em, 4vw, 1.5em); height: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+        .fx-container { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
         .petal { position: absolute; top: -10vh; z-index: 5; animation: fallPetal linear forwards; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
         @keyframes fallPetal { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-        
-        .trail { position: absolute; width: 8px; height: 8px; background: #ff9a9e; border-radius: 50%; pointer-events: none; z-index: 100; box-shadow: 0 0 15px #ff9a9e; animation: fadeTrail 1s linear forwards; }
-        @keyframes fadeTrail { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
 
-        /* ===== Screen 1: Fingerprint Lock Screen ===== */
-        #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding-bottom: 80px; }
-        .lock-time { position: absolute; top: 15%; text-align: center; width: 100%; }
-        .lock-time h1 { font-family: 'Outfit', sans-serif; font-size: 5rem; font-weight: 300; margin-bottom: -10px; color: rgba(255,255,255,0.9); }
-        .lock-time p { font-size: 1.2rem; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
-
-        .fp-wrapper { position: relative; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; }
-        .fp-ripple { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #00ffcc; opacity: 0; box-shadow: 0 0 20px #00ffcc; }
-        .scanning .fp-ripple { animation: rippleAnim 1.5s infinite linear; }
-        @keyframes rippleAnim { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
+        /* ===== Screen 1: Lock Screen with Jyoti's Photo ===== */
+        #lock-screen {
+            position: absolute; inset: 0; 
+            background: url('jyoti.jpeg') center/cover no-repeat;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center; 
+            z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding: 10vh 0 8vh;
+        }
+        #lock-screen::before {
+            content: ''; position: absolute; inset: 0; 
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 0;
+        }
         
-        .fp-sensor { position: relative; width: 80px; height: 80px; border-radius: 50%; border: 2px solid rgba(0, 255, 204, 0.3); background: rgba(0,255,204,0.05); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; overflow: hidden; z-index: 2; box-shadow: 0 0 20px rgba(0,255,204,0.1); }
-        .fp-sensor:active { transform: scale(0.92); background: rgba(0,255,204,0.2); }
-        .fp-sensor img { width: 50px; filter: invert(1) drop-shadow(0 0 5px #00ffcc); opacity: 0.7; transition: 0.3s; }
+        .lock-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: space-between;}
+        
+        .lock-time { text-align: center; }
+        .lock-time h1 { font-family: 'Outfit', sans-serif; font-size: clamp(4rem, 15vw, 5.5rem); font-weight: 300; margin-bottom: -5px; color: #fff; }
+        .lock-time p { font-size: clamp(1rem, 4vw, 1.2rem); color: rgba(255,255,255,0.9); font-weight: 500; }
+
+        /* Real Fingerprint Image from Web */
+        .fp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .fp-sensor { 
+            position: relative; width: 75px; height: 75px; border-radius: 50%; 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; transition: 0.3s; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,204,0.1); 
+        }
+        .fp-sensor:active { transform: scale(0.92); background: rgba(0,255,204,0.15); border-color: #00ffcc; }
+        /* Using a clean fingerprint icon from Flaticon/Google */
+        .fp-sensor img { width: 45px; filter: invert(1) opacity(0.8); transition: 0.3s; }
         .scanning .fp-sensor img { opacity: 1; filter: invert(1) sepia(1) saturate(5) hue-rotate(130deg) drop-shadow(0 0 10px #00ffcc); }
-        .scan-line { position: absolute; top: -10%; left: 0; width: 100%; height: 3px; background: #00ffcc; box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc; display: none; }
+        .scan-line { position: absolute; top: -10%; left: 0; width: 100%; height: 3px; background: #00ffcc; box-shadow: 0 0 15px #00ffcc; display: none; }
         .scanning .scan-line { display: block; animation: fpScan 1.2s infinite ease-in-out; }
         @keyframes fpScan { 0% { top: -10%; } 50% { top: 100%; } 100% { top: -10%; } }
         
-        #unlock-msg { margin-top: 30px; font-size: 1.1rem; color: #888; font-weight: 500; font-family: 'Outfit'; }
-        .success-text { color: #00e676 !important; font-weight: 600; text-shadow: 0 0 15px rgba(0,230,118,0.6); }
+        #unlock-msg { font-size: clamp(0.9rem, 3.5vw, 1rem); color: #ddd; font-weight: 500; font-family: 'Outfit'; letter-spacing: 1px; }
 
-        /* ===== Screen 2: App Dashboard ===== */
-        #dashboard { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 40px 20px; opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; pointer-events: none; }
+        /* ===== Screen 2: Home Dashboard ===== */
+        #dashboard { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 6vh 5vw 2vh; opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; pointer-events: none; }
         #dashboard.show { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-        /* Widgets Area */
-        .widget-row { display: flex; gap: 15px; margin-bottom: 25px; }
+        /* Top Widgets */
+        .widget-row { display: flex; gap: 4vw; margin-bottom: 3vh; height: 18vh; }
+        .profile-widget { flex: 1; border-radius: 25px; padding: 2vh 2vw; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .profile-img-wrap { width: clamp(55px, 15vw, 70px); height: clamp(55px, 15vw, 70px); border-radius: 50%; padding: 2px; background: linear-gradient(45deg, #ff9a9e, #fecfef); margin-bottom: 8px; }
+        .profile-img-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .profile-widget h2 { font-size: clamp(1rem, 4vw, 1.2rem); color: #fff; margin-bottom: 2px; font-weight: 600;}
         
-        /* Profile Widget */
-        .profile-widget { flex: 1; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .profile-img-wrap { width: 75px; height: 75px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #ff9a9e, #fecfef); margin-bottom: 10px; }
-        .profile-img-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #1a1a2e; }
-        .profile-widget h2 { font-size: 1.3rem; color: #ff9a9e; margin-bottom: 2px; }
-        .profile-widget p { font-size: 0.85rem; color: #ccc; }
+        .timer-widget { flex: 1.5; border-radius: 25px; padding: 2vh 3vw; display: flex; flex-direction: column; justify-content: center; }
+        .timer-widget h3 { font-size: clamp(0.75rem, 3vw, 0.9rem); color: #ddd; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .t-box { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 5px 2px; text-align: center; }
+        .t-val { font-size: clamp(1rem, 4vw, 1.2rem); font-weight: 700; color: #ff9a9e; font-family: 'Outfit'; }
+        .t-lbl { font-size: clamp(0.5rem, 2vw, 0.6rem); color: #aaa; text-transform: uppercase; }
 
-        /* Timer Widget */
-        .timer-widget { flex: 1.2; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
-        .timer-widget h3 { font-size: 0.95rem; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .timer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .t-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 8px 5px; text-align: center; }
-        .t-val { font-size: 1.2rem; font-weight: 700; color: #ff9a9e; font-family: 'Outfit'; }
-        .t-lbl { font-size: 0.6rem; color: #aaa; text-transform: uppercase; }
+        .greeting { font-size: clamp(1.8rem, 7vw, 2.2rem); font-weight: 700; color: #fff; line-height: 1.2; text-shadow: 0 4px 10px rgba(0,0,0,0.4); margin-top: 1vh;}
 
-        /* Welcome Text */
-        .greeting { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 5px; line-height: 1.2; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .greeting-sub { font-size: 1.1rem; color: #ddd; margin-bottom: auto; }
-
-        /* ===== iOS Bottom Dock (App Menu) ===== */
-        .bottom-dock { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 20px 40px; border-radius: 40px 40px 0 0; border-bottom: none; z-index: 10; }
-        .dock-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 5px; margin: 0 auto 20px; }
-        
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; }
-        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
+        /* ===== iOS Floating Dock (Compact) ===== */
+        .bottom-dock { position: absolute; bottom: 3vh; left: 4%; width: 92%; padding: 20px 15px; border-radius: 35px; z-index: 10; display: flex; flex-direction: column; gap: 15px; }
+        .app-row { display: flex; justify-content: space-around; width: 100%; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; width: 22%; }
         .app-item:active { transform: scale(0.9); }
-        .app-icon { width: 60px; height: 60px; border-radius: 18px; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; margin-bottom: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
-        .app-item:hover .app-icon { background: rgba(255,255,255,0.25); border-color: rgba(255,154,158,0.5); }
-        .app-icon img { width: 32px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
-        .app-label { font-size: 0.75rem; color: #eee; font-weight: 500; text-align: center; line-height: 1.1; }
+        .app-icon { width: clamp(45px, 14vw, 55px); height: clamp(45px, 14vw, 55px); border-radius: 14px; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; margin-bottom: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
+        .app-icon img { width: 55%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+        .app-label { font-size: clamp(0.6rem, 2.5vw, 0.75rem); color: #eee; font-weight: 500; text-align: center; white-space: nowrap;}
 
-        /* ===== iOS Style Action Sheets (Modals) ===== */
-        .ios-sheet-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s ease; }
+        /* ===== Slide-up Modals (iOS Action Sheets) ===== */
+        .ios-sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s ease; }
         .ios-sheet-overlay.active { opacity: 1; visibility: visible; }
         
-        .ios-sheet { position: absolute; bottom: 0; left: 0; width: 100%; max-height: 90vh; background: rgba(30, 20, 45, 0.95); backdrop-filter: blur(25px); border-radius: 35px 35px 0 0; padding: 20px 25px 40px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); border-top: 1px solid rgba(255,255,255,0.15); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); overflow-y: auto; }
+        .ios-sheet { position: absolute; bottom: 0; left: 0; width: 100%; max-height: 85vh; border-radius: 35px 35px 0 0; padding: 25px 25px 40px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         .ios-sheet::-webkit-scrollbar { display: none; }
         .ios-sheet-overlay.active .ios-sheet { transform: translateY(0); }
         
-        .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .sheet-title { font-size: 1.4rem; font-weight: 700; color: #ff9a9e; display: flex; align-items: center; gap: 8px; }
-        .sheet-close { background: rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; color: #fff; cursor: pointer; border: none; font-size: 1.1rem; }
-        
-        /* Modals Inner UI */
-        .contract-paper { background: #fffdf9; color: #444; padding: 20px; border-radius: 20px; font-family: 'Anek Bangla'; border: 1px solid #dcbca4; }
-        .contract-title { text-align: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: #8c5260; margin-bottom: 10px; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
-        .contract-rules { font-size: 1rem; line-height: 1.5; margin-bottom: 20px; font-weight: 500; }
-        
-        .fog-container { position: relative; width: 100%; height: 220px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .secret-letter { font-size: 1.1rem; color: #5a463a; font-weight: 600; text-align: center; }
-        #fogCanvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; }
+        .dock-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 5px; margin: 0 auto 20px; }
+        .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .sheet-title { font-size: clamp(1.2rem, 5vw, 1.4rem); font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .sheet-close { background: rgba(255,255,255,0.15); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; color: #fff; cursor: pointer; border: none; font-size: 1rem; }
 
-        .runaway-container { position: relative; width: 100%; height: 200px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 12px 25px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; border: none; cursor: pointer; transition: 0.2s ease; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(255,107,129,0.5); }
-
-        .slot-machine { font-size: 1.5rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; margin-bottom: 15px; min-height: 90px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        /* Inner Content Scaling */
+        .contract-paper { background: rgba(255,255,255,0.95); color: #333; padding: 20px; border-radius: 20px; font-family: 'Anek Bangla'; }
+        .contract-title { text-align: center; font-family: 'Dancing Script'; font-size: 1.6rem; color: #d6336c; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;}
+        .contract-rules { font-size: clamp(0.9rem, 3.5vw, 1rem); line-height: 1.5; margin-bottom: 15px; font-weight: 500; }
         
-        .action-btn { width: 100%; padding: 15px; border-radius: 25px; background: #ff9a9e; color: #1a1a2e; font-weight: bold; border: none; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
-        .action-btn:active { transform: scale(0.95); }
-        
-        .audio-player-container { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1);}
-        audio { width: 100%; height: 40px; outline: none; }
+        .fog-container { position: relative; width: 100%; height: 200px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .secret-letter { font-size: clamp(0.95rem, 4vw, 1.1rem); color: #5a463a; font-weight: 600; text-align: center; }
+        #fogCanvas { position: absolute; inset: 0; z-index: 5; cursor: pointer; width: 100%; height: 100%;}
 
-        /* Universal Music Toggle */
-        .music-btn { position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: 0.3s; display: none; }
-        .music-btn.playing { animation: pulseMusic 2s infinite; border-color: #ff6b81; }
-        @keyframes pulseMusic { 0% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(255, 107, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0); } }
+        .runaway-container { position: relative; width: 100%; height: 180px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; }
+        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 20px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; border: none; font-size: clamp(0.9rem, 3.5vw, 1rem); box-shadow: 0 5px 15px rgba(255,107,129,0.5); }
+
+        .slot-machine { font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: 700; color: #fff; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 80px;}
+        .action-btn { width: 100%; padding: 14px; border-radius: 25px; background: rgba(255,255,255,0.2); color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); font-size: 1.1rem; cursor: pointer; transition: 0.2s; backdrop-filter: blur(5px);}
+        .action-btn:active { transform: scale(0.96); background: rgba(255,107,129,0.8); }
+
+        /* Music Toggle */
+        .music-btn { position: absolute; top: 5vh; right: 5vw; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 100; transition: 0.3s; display: none; }
+        .music-btn.playing { border-color: #ff6b81; box-shadow: 0 0 15px rgba(255,107,129,0.5); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
 
-    <!-- Global Background Audio -->
     <audio id="bgMusic" loop><source src="song.mp3" type="audio/mpeg"></audio>
-    <div class="music-btn glass" id="musicToggle" onclick="toggleMusic()">
+    <div class="music-btn ios-glass" id="musicToggle" onclick="toggleMusic()">
         <img src="https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png" class="ios-emoji" alt="Music">
     </div>
 
-    <div class="floating-container" id="fxContainer"></div>
+    <div class="fx-container" id="fxContainer"></div>
 
     <!-- ===== Lock Screen (Biometric Unlock) ===== -->
     <div id="lock-screen">
-        <div class="lock-time">
-            <h1 id="clockTime">--:--</h1>
-            <p id="clockDate">Thursday, July 2</p>
-        </div>
-        
-        <div class="fp-wrapper">
-            <div class="fp-ripple"></div>
-            <div class="fp-sensor" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
-                <img src="https://em-content.zobj.net/source/apple/391/fingerprint_1f5a5.png" alt="FP">
-                <div class="scan-line"></div>
+        <div class="lock-content">
+            <div class="lock-time" style="margin-top: 5vh;">
+                <h1 id="clockTime">--:--</h1>
+                <p id="clockDate">Loading...</p>
+            </div>
+            
+            <div class="fp-wrapper">
+                <div class="fp-sensor" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+                    <!-- Real fingerprint transparent image from web -->
+                    <img src="https://cdn-icons-png.flaticon.com/512/3112/3112776.png" alt="FP">
+                    <div class="scan-line"></div>
+                </div>
+                <p id="unlock-msg">Press & Hold to Unlock</p>
             </div>
         </div>
-        <p id="unlock-msg">Press & Hold to Unlock</p>
     </div>
 
-    <!-- ===== Dashboard (Main App Screen) ===== -->
+    <!-- ===== Dashboard / Home Screen ===== -->
     <div id="dashboard">
         
         <div class="widget-row">
-            <!-- Profile Widget -->
-            <div class="profile-widget glass">
+            <div class="profile-widget ios-glass">
                 <div class="profile-img-wrap"><img src="jyoti.jpeg" alt="Jyoti"></div>
                 <h2>জ্যোতি</h2>
-                <p>My Universe ✨</p>
+                <p style="font-size: 0.75rem; color:#ccc;">My Universe <img src="https://em-content.zobj.net/source/apple/391/sparkles_2728.png" class="ios-emoji" style="width:1em;"></p>
             </div>
             
-            <!-- Live Timer Widget -->
-            <div class="timer-widget glass">
-                <h3>Our Time <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" class="ios-emoji"></h3>
+            <div class="timer-widget ios-glass">
+                <h3>Our Time <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" class="ios-emoji" style="width:1.2em;"></h3>
                 <div class="timer-grid">
                     <div class="t-box"><div class="t-val" id="t-days">0</div><div class="t-lbl">Days</div></div>
-                    <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Hours</div></div>
-                    <div class="t-box"><div class="t-val" id="t-mins">00</div><div class="t-lbl">Mins</div></div>
-                    <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Secs</div></div>
+                    <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Hrs</div></div>
+                    <div class="t-box"><div class="t-val" id="t-mins">00</div><div class="t-lbl">Min</div></div>
+                    <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Sec</div></div>
                 </div>
             </div>
         </div>
 
         <div class="greeting" id="typewriterText"></div>
-        <p class="greeting-sub">কী সারপ্রাইজ দেখবে আজ?</p>
+        <p style="font-size: clamp(0.9rem, 3.5vw, 1rem); color: #ccc; margin-top: 5px;">কী সারপ্রাইজ দেখবে আজ?</p>
 
-        <!-- iOS Bottom App Dock -->
-        <div class="bottom-dock glass">
-            <div class="dock-indicator"></div>
-            <div class="app-grid">
-                
+        <!-- Compact iOS Bottom Dock -->
+        <div class="bottom-dock ios-glass">
+            <!-- Row 1 -->
+            <div class="app-row">
                 <div class="app-item" onclick="openSheet('contractSheet')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/scroll_1f4dc.png"></div>
                     <span class="app-label">চুক্তিপত্র</span>
@@ -207,13 +214,15 @@
                 </div>
                 <div class="app-item" onclick="openSheet('fogSheet'); initFog();">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png"></div>
-                    <span class="app-label">সিক্রেট চিঠি</span>
+                    <span class="app-label">চিঠি</span>
                 </div>
                 <div class="app-item" onclick="openSheet('runawaySheet'); resetRunaway();">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/face-holding-back-tears_1f979.png"></div>
                     <span class="app-label">মিস করো?</span>
                 </div>
-                
+            </div>
+            <!-- Row 2 -->
+            <div class="app-row">
                 <div class="app-item" onclick="openSheet('dateSheet')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/clinking-glasses_1f942.png"></div>
                     <span class="app-label">ডেট স্পিনার</span>
@@ -227,19 +236,19 @@
                     <span class="app-label">লাভ মিটার</span>
                 </div>
                 <div class="app-item" onclick="triggerRoseRain(); triggerLanterns();">
-                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/sparkles_2728.png"></div>
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/magic-wand_1fa84.png"></div>
                     <span class="app-label">ম্যাজিক</span>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- ===== All iOS Action Sheets (Modals) ===== -->
+    <!-- ===== Slide-up Modals (iOS Action Sheets) ===== -->
 
-    <!-- Contract Sheet -->
+    <!-- Contract -->
     <div class="ios-sheet-overlay" id="contractSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">চুক্তিপত্র <img src="https://em-content.zobj.net/source/apple/391/pen_1f58a-fe0f.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('contractSheet')">✖</button>
@@ -247,63 +256,66 @@
             <div class="contract-paper">
                 <div class="contract-title">ভালোবাসার চুক্তি</div>
                 <div class="contract-rules">
-                    আমি, <b>জ্যোতি</b>, সজ্ঞানে মেনে নিচ্ছি যে:<br><br>
-                    ১. আমাকে সবসময় স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
-                    ২. আমি যত রাগই করি, আমাকেই আদর করে মানাতে হবে।<br>
-                    ৩. আমরা একে অপরের হাত সবসময় শক্ত করে ধরে রাখবো।<br>
+                    আমি, <b>জ্যোতি</b>, মেনে নিচ্ছি যে:<br><br>
+                    ১. আমাকে স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
+                    ২. আমি যত রাগই করি, আমাকেই মানাতে হবে।<br>
+                    ৩. আমরা একে অপরের হাত সবসময় ধরে রাখবো।<br>
                 </div>
-                <button class="action-btn" id="agreeBtn" onclick="signContract()" style="margin-top: 10px;">আমি রাজি ❤️</button>
+                <button class="action-btn" id="agreeBtn" onclick="signContract()" style="background:#ff6b81; color:#fff; border:none;">আমি রাজি ❤️</button>
             </div>
         </div>
     </div>
 
-    <!-- Voice Note Sheet -->
+    <!-- Voice Note -->
     <div class="ios-sheet-overlay" id="voiceSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">ভয়েস মেসেজ <img src="https://em-content.zobj.net/source/apple/391/microphone_1f3a4.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('voiceSheet')">✖</button>
             </div>
-            <p style="color: #ccc; text-align: center;">প্লে বাটনে চাপ দাও...</p>
-            <div class="audio-player-container">
-                <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width: 50px;">
-                <audio controls id="secretAudio"><source src="voice_message.mp3" type="audio/mpeg"></audio>
+            <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:20px; text-align:center;">
+                <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width:50px; margin-bottom:15px;">
+                <audio controls id="secretAudio" style="width:100%; height:40px;"><source src="voice_message.mp3" type="audio/mpeg"></audio>
             </div>
         </div>
     </div>
 
-    <!-- Fog Sheet -->
+    <!-- Fog Wipe -->
     <div class="ios-sheet-overlay" id="fogSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
-                <div class="sheet-title">কুয়াশা মুছুন <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-emoji"></div>
+                <div class="sheet-title">চিঠি <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('fogSheet')">✖</button>
             </div>
             <div class="fog-container">
                 <div class="secret-letter">আমার প্রিয় জ্যোতি,<br><br>তুমি আমার জীবনের আলো। আমি তোমাকে অনেক ভালোবাসি! ❤️</div>
-                <canvas id="fogCanvas" width="340" height="220"></canvas>
+                <canvas id="fogCanvas"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Runaway Sheet -->
+    <!-- Runaway -->
     <div class="ios-sheet-overlay" id="runawaySheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">সত্যি বলবে! <img src="https://em-content.zobj.net/source/apple/391/eyes_1f440.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('runawaySheet')">✖</button>
             </div>
-            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 10px;">তুমি কি আমাকে মিস করো?</p>
+            <p style="text-align:center; margin-bottom:10px;">তুমি কি আমাকে মিস করো?</p>
             <div class="runaway-container" id="chaseArea">
                 <button class="chase-btn" id="runBtn" onmouseover="dodgeButton()" ontouchstart="dodgeButton()" onclick="caughtButton()">হ্যাঁ, অনেক! 🥺</button>
             </div>
-            <p id="catchResult" style="color: #00e676; text-align: center; margin-top: 20px; font-weight: bold; display: none; font-size: 1.3rem;">আমিও অনেক মিস করি! ❤️</p>
+            <p id="catchResult" style="color:#00e676; text-align:center; margin-top:15px; font-weight:bold; display:none;">আমিও অনেক মিস করি! ❤️</p>
         </div>
     </div>
 
-    <!-- Date Spinner Sheet -->
+    <!-- Date Spinner -->
     <div class="ios-sheet-overlay" id="dateSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">ডেট স্পিনার 🎲</div>
                 <button class="sheet-close" onclick="closeSheet('dateSheet')">✖</button>
@@ -313,35 +325,37 @@
         </div>
     </div>
 
-    <!-- Gift Sheet -->
+    <!-- Gift -->
     <div class="ios-sheet-overlay" id="giftSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">উপহার <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('giftSheet')">✖</button>
             </div>
-            <div style="text-align: center;">
-                <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 140px; cursor: pointer; transition: 0.3s; margin: 10px 0;" onclick="openGift()">
-                <p id="giftText" style="color: #ccc; font-weight: 500;">বক্সে ট্যাপ করো!</p>
-                <div id="hiddenGift" style="display: none; margin-top: 15px;">
-                    <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 70px; margin-bottom: 10px;">
-                    <p style="color: #ff9a9e; font-size: 1.5rem; font-weight: 700;">অনেক ভালোবাসা! ❤️</p>
+            <div style="text-align: center; background:rgba(255,255,255,0.05); padding:20px; border-radius:20px;">
+                <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 120px; cursor: pointer; transition: 0.3s; margin-bottom:10px;" onclick="openGift()">
+                <p id="giftText" style="color: #ccc;">বক্সে ট্যাপ করো!</p>
+                <div id="hiddenGift" style="display: none; margin-top: 10px;">
+                    <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 60px; margin-bottom: 5px;">
+                    <p style="color: #ff9a9e; font-size: 1.3rem; font-weight: 700;">অনেক ভালোবাসা! ❤️</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Meter Sheet -->
+    <!-- Love Meter -->
     <div class="ios-sheet-overlay" id="meterSheet">
-        <div class="ios-sheet">
+        <div class="ios-sheet ios-glass-dark">
+            <div class="dock-indicator"></div>
             <div class="sheet-header">
                 <div class="sheet-title">লাভ মিটার <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-emoji"></div>
                 <button class="sheet-close" onclick="closeSheet('meterSheet')">✖</button>
             </div>
-            <div style="font-size: 4rem; color: #ff9a9e; font-weight: 700; text-align: center; font-family: 'Outfit';" id="meterValue">0%</div>
-            <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 20px 0; height: 25px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 30px; transition: 0.1s;" id="meterFill"></div></div>
+            <div style="font-size: 3.5rem; color: #ff9a9e; font-weight: 700; text-align: center; font-family: 'Outfit';" id="meterValue">0%</div>
+            <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 20px; margin: 15px 0; height: 20px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 20px; transition: 0.1s;" id="meterFill"></div></div>
             <button class="action-btn" id="calcLoveBtn" onclick="calculateLove()">হিসাব করো</button>
-            <div id="loveResult" style="display: none; text-align: center; margin-top: 20px; color: #00e676; font-size: 1.3rem; font-weight: 700;">ভালোবাসা অসীম! ♾️</div>
+            <div id="loveResult" style="display: none; text-align: center; margin-top: 15px; color: #00e676; font-size: 1.2rem; font-weight: 700;">ভালোবাসা অসীম! ♾️</div>
         </div>
     </div>
 
@@ -350,29 +364,15 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-    // System Clock for Lockscreen
+    // Live Clock for Lockscreen
     setInterval(() => {
         const now = new Date();
         document.getElementById('clockTime').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         document.getElementById('clockDate').innerText = now.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'});
     }, 1000);
 
-    // Magic Dust FX
-    const appContainer = document.querySelector('.app-container');
-    appContainer.addEventListener('mousemove', function(e) { createDust(e.clientX, e.clientY); });
-    appContainer.addEventListener('touchmove', function(e) { createDust(e.touches[0].clientX, e.touches[0].clientY); });
-    function createDust(x, y) {
-        if(Math.random() > 0.4) return; 
-        let dust = document.createElement('div');
-        dust.className = 'trail';
-        dust.style.left = x + 'px'; dust.style.top = y + 'px';
-        appContainer.appendChild(dust);
-        setTimeout(() => { dust.remove(); }, 1000);
-    }
-
-    // Advanced Fingerprint & App Launch
-    let scanTimer;
-    let musicPlaying = false;
+    // Fingerprint Unlock Logic
+    let scanTimer; let musicPlaying = false;
     const msg = document.getElementById('unlock-msg');
     const scanner = document.getElementById('fpScanner');
     const bgMusic = document.getElementById('bgMusic');
@@ -386,48 +386,42 @@
             scanner.parentElement.classList.remove('scanning');
             msg.innerHTML = "Unlocked <img src='https://em-content.zobj.net/source/apple/391/check-mark-button_2705.png' class='ios-emoji'>";
             msg.classList.add('success-text');
-            
             bgMusic.play().catch(()=>{});
-            musicPlaying = true;
-            musicBtn.style.display = 'flex'; musicBtn.classList.add('playing');
+            musicPlaying = true; musicBtn.style.display = 'flex'; musicBtn.classList.add('playing');
             
             setTimeout(() => {
                 document.getElementById('lock-screen').style.opacity = '0';
-                document.getElementById('lock-screen').style.transform = 'translateY(-20px) scale(1.05)';
+                document.getElementById('lock-screen').style.transform = 'scale(1.1)';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('dashboard').classList.add('show');
                     typeWriter(); startLoveTimer();
                 }, 600);
             }, 1000);
-        }, 2200);
+        }, 2000);
     }
 
     function stopScan() {
         clearTimeout(scanTimer);
         if(!msg.classList.contains('success-text')) {
             scanner.parentElement.classList.remove('scanning');
-            msg.innerText = "Scan Failed. Hold Finger."; msg.style.color = "#ff4757";
+            msg.innerText = "Hold Finger to Unlock"; msg.style.color = "#fff";
         }
     }
 
     function toggleMusic() {
-        if(musicPlaying) { bgMusic.pause(); musicBtn.classList.remove('playing'); musicBtn.style.background = 'rgba(255,255,255,0.1)'; } 
-        else { bgMusic.play(); musicBtn.classList.add('playing'); musicBtn.style.background = 'rgba(255,107,129,0.2)'; }
+        if(musicPlaying) { bgMusic.pause(); musicBtn.classList.remove('playing'); } 
+        else { bgMusic.play(); musicBtn.classList.add('playing'); }
         musicPlaying = !musicPlaying;
     }
 
-    // Typewriter Greeting
-    const text = "হ্যালো, জ্যোতি ";
-    let i = 0;
+    const text = "হ্যালো, জ্যোতি "; let i = 0;
     function typeWriter() {
-        if (i < text.length) {
-            document.getElementById("typewriterText").innerHTML += text.charAt(i); i++;
-            setTimeout(typeWriter, 120);
-        } else { document.getElementById("typewriterText").innerHTML += `<img src="https://em-content.zobj.net/source/apple/391/sparkling-heart_1f496.png" class="ios-emoji">`; }
+        if (i < text.length) { document.getElementById("typewriterText").innerHTML += text.charAt(i); i++; setTimeout(typeWriter, 120); } 
+        else { document.getElementById("typewriterText").innerHTML += `<img src="https://em-content.zobj.net/source/apple/391/sparkling-heart_1f496.png" class="ios-emoji">`; }
     }
 
-    // Accurate Live Timer (Starts 11 days, 21 hours ago based on requested exact timeline)
+    // Accurate Live Timer (June 20, 2026, 18:32:00)
     const startDate = new Date(2026, 5, 20, 18, 32, 0).getTime(); 
     function startLoveTimer() {
         setInterval(() => {
@@ -439,43 +433,37 @@
         }, 1000);
     }
 
-    // iOS Sheet Modal Control
+    // Modal Control
     function openSheet(id) { document.getElementById(id).classList.add('active'); }
-    function closeSheet(id) { 
-        document.getElementById(id).classList.remove('active'); 
-        if(id === 'voiceSheet') document.getElementById('secretAudio').pause();
-        if(id === 'meterSheet') resetLoveMeter();
-    }
+    function closeSheet(id) { document.getElementById(id).classList.remove('active'); if(id === 'voiceSheet') document.getElementById('secretAudio').pause(); if(id === 'meterSheet') resetLoveMeter(); }
 
-    // Contract
     function signContract() {
-        const btn = document.getElementById('agreeBtn');
-        btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖"; btn.style.background = "#00e676";
-        confetti({ particleCount: 150, spread: 80, origin: { y: 0.8 } });
-        setTimeout(() => { closeSheet('contractSheet'); }, 2000);
+        const btn = document.getElementById('agreeBtn'); btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖"; btn.style.background = "#00e676";
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.8 } }); setTimeout(() => { closeSheet('contractSheet'); }, 2000);
     }
 
-    // Fog Wipe
+    // Responsive Fog Canvas Setup
     function initFog() {
         const canvas = document.getElementById('fogCanvas');
+        const container = document.querySelector('.fog-container');
+        canvas.width = container.offsetWidth; canvas.height = container.offsetHeight;
+        
         const ctx = canvas.getContext('2d');
         ctx.globalCompositeOperation = "source-over";
         ctx.fillStyle = "rgba(255, 255, 255, 0.96)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for(let k=0; k<300; k++) { ctx.fillStyle = "rgba(200, 200, 200, 0.4)"; ctx.beginPath(); ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2); ctx.fill(); }
-        ctx.font = "16px 'Anek Bangla'"; ctx.fillStyle = "#666"; ctx.textAlign = "center";
-        ctx.fillText("ঘষে কুয়াশা মুছুন ❄️", canvas.width/2, canvas.height/2);
+        for(let k=0; k<200; k++) { ctx.fillStyle = "rgba(200, 200, 200, 0.4)"; ctx.beginPath(); ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2); ctx.fill(); }
+        ctx.font = "16px 'Anek Bangla'"; ctx.fillStyle = "#666"; ctx.textAlign = "center"; ctx.fillText("ঘষে কুয়াশা মুছুন ❄️", canvas.width/2, canvas.height/2);
 
-        let isDrawing = false;
-        ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.lineWidth = 40;
+        let isDrawing = false; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.lineWidth = 35;
         function getMousePos(evt) { const rect = canvas.getBoundingClientRect(); return { x: (evt.clientX || evt.touches[0].clientX) - rect.left, y: (evt.clientY || evt.touches[0].clientY) - rect.top }; }
-        function startWipe(e) { isDrawing = true; ctx.globalCompositeOperation = "destination-out"; const pos = getMousePos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
         function wipe(e) { if (!isDrawing) return; const pos = getMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }
-        function stopWipe() { isDrawing = false; }
-        canvas.addEventListener('mousedown', startWipe); canvas.addEventListener('mousemove', wipe); canvas.addEventListener('mouseup', stopWipe);
-        canvas.addEventListener('touchstart', startWipe); canvas.addEventListener('touchmove', wipe); canvas.addEventListener('touchend', stopWipe);
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.globalCompositeOperation = "destination-out"; const p = getMousePos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+        canvas.addEventListener('mousemove', wipe); canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; ctx.globalCompositeOperation = "destination-out"; const p = getMousePos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+        canvas.addEventListener('touchmove', wipe); canvas.addEventListener('touchend', () => isDrawing = false);
     }
 
-    // Runaway
+    // Runaway Button
     let dodgeCount = 0;
     function dodgeButton() {
         if(dodgeCount < 4) {
@@ -495,7 +483,7 @@
         if(spinning) return; spinning = true; const slot = document.getElementById('slotText'); let spins = 0;
         const spinInterval = setInterval(() => {
             slot.innerText = dateIdeas[Math.floor(Math.random() * dateIdeas.length)]; spins++;
-            if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: 1.8rem; color:#ff9a9e;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 80, origin: { y: 0.8 } }); }
+            if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: clamp(1.2rem, 4vw, 1.5rem); color:#ff9a9e;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 80, origin: { y: 0.8 } }); }
         }, 80);
     }
 
@@ -518,26 +506,26 @@
     // Magic FX (Roses & Lanterns)
     function triggerRoseRain() {
         const container = document.getElementById('fxContainer');
-        for(let i=0; i<25; i++) {
+        for(let i=0; i<20; i++) {
             setTimeout(() => {
                 const petal = document.createElement('img'); petal.src = 'https://em-content.zobj.net/source/apple/391/rose_1f339.png'; petal.classList.add('petal');
-                petal.style.left = Math.random() * 100 + "vw"; petal.style.width = (Math.random() * 15 + 15) + "px"; petal.style.animationDuration = (Math.random() * 2 + 4) + "s";
-                container.appendChild(petal); setTimeout(() => { petal.remove(); }, 6000);
+                petal.style.left = Math.random() * 100 + "vw"; petal.style.width = (Math.random() * 15 + 15) + "px"; petal.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                container.appendChild(petal); setTimeout(() => { petal.remove(); }, 5000);
             }, i * 150);
         }
     }
 
     function triggerLanterns() {
         const container = document.getElementById('fxContainer');
-        for(let i=0; i<8; i++) {
+        for(let i=0; i<6; i++) {
             setTimeout(() => {
                 let lantern = document.createElement('img'); lantern.src = 'https://em-content.zobj.net/source/apple/391/red-paper-lantern_1f3ee.png';
                 lantern.style.position = 'absolute'; lantern.style.bottom = '-60px'; lantern.style.width = (Math.random() * 20 + 30) + 'px'; lantern.style.left = (Math.random() * 90) + 'vw';
-                lantern.style.filter = 'drop-shadow(0 10px 20px rgba(255, 100, 0, 0.8))'; lantern.style.transition = 'transform ' + (Math.random() * 3 + 6) + 's ease-in, opacity 2s';
+                lantern.style.filter = 'drop-shadow(0 5px 15px rgba(255, 100, 0, 0.8))'; lantern.style.transition = 'transform ' + (Math.random() * 3 + 5) + 's ease-in, opacity 2s';
                 container.appendChild(lantern);
-                setTimeout(() => { lantern.style.transform = `translateY(-120vh) translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 30 - 15}deg)`; }, 50);
-                setTimeout(() => { lantern.remove(); }, 9000);
-            }, i * 350);
+                setTimeout(() => { lantern.style.transform = `translateY(-120vh) translateX(${Math.random() * 80 - 40}px) rotate(${Math.random() * 30 - 15}deg)`; }, 50);
+                setTimeout(() => { lantern.remove(); }, 8000);
+            }, i * 300);
         }
     }
 </script>
