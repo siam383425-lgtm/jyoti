@@ -2,489 +2,544 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jyoti's Magical Universe ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jyoti's Universe</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Anek+Bangla:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; user-select: none; }
+        /* ===== Global App Setup ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); 
+            background: #000;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow: hidden; position: relative;
-            font-family: 'Anek Bangla', 'Outfit', sans-serif; color: #fff;
+            min-height: 100vh; overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Anek Bangla', 'Outfit', sans-serif;
+            color: #fff;
         }
 
-        /* ===== iOS Emojis ===== */
-        .ios-emoji { width: 1.2em; height: 1.2em; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-        .ios-emoji-xl { width: 4.5em; height: 4.5em; margin-bottom: 15px; }
-        .ios-icon { width: 38px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+        /* Phone Container (For Desktop view scaling) */
+        .app-container {
+            position: relative; width: 100vw; height: 100vh; max-width: 430px; 
+            background: linear-gradient(135deg, #130a1e, #31133f, #1b0c2e);
+            overflow: hidden; box-shadow: 0 0 50px rgba(255,255,255,0.1);
+        }
 
-        /* ===== Interactive Magic Dust & Effects ===== */
-        .trail { position: absolute; width: 8px; height: 8px; background: #ff9a9e; border-radius: 50%; pointer-events: none; z-index: 50; box-shadow: 0 0 15px #ff9a9e; animation: fadeTrail 1s linear forwards; }
-        @keyframes fadeTrail { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
+        /* ===== iOS Glassmorphism ===== */
+        .glass { background: rgba(255, 255, 255, 0.08); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+
+        /* ===== Emojis & FX ===== */
+        .ios-emoji { width: 1.2em; height: 1.2em; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
         
-        .floating-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .petal { position: absolute; top: -10vh; z-index: 5; animation: fallPetal linear forwards; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
+        .floating-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+        .petal { position: absolute; top: -10vh; z-index: 5; animation: fallPetal linear forwards; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
         @keyframes fallPetal { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-
-        /* ===== Glass Panel ===== */
-        .glass-panel { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5); }
-
-        /* ===== Fingerprint Screen ===== */
-        #welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #24243e, #0f0c29); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; transition: 0.8s ease; }
-        .fingerprint-container { position: relative; width: 130px; height: 130px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 3px solid rgba(255, 255, 255, 0.1); transition: 0.3s; background: rgba(0,0,0,0.2); }
-        .fingerprint-container:active { transform: scale(0.92); border-color: #ff6b81; box-shadow: 0 0 40px rgba(255, 107, 129, 0.6); }
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #ff6b81; box-shadow: 0 0 20px #ff6b81, 0 0 40px #ff6b81; border-radius: 5px; opacity: 0; transition: 0.1s; }
-        .scanning .scan-line { opacity: 1; animation: scanAnim 1.2s infinite ease-in-out; }
-        @keyframes scanAnim { 0% { top: 5%; } 50% { top: 95%; } 100% { top: 5%; } }
-        #unlock-msg { margin-top: 30px; font-size: 1.2rem; color: #aaa; font-weight: 500; letter-spacing: 2px; }
-        .success-text { color: #00e676 !important; font-weight: 700; text-shadow: 0 0 15px rgba(0,230,118,0.6); }
-
-        /* ===== Main Card ===== */
-        .container { padding: 35px 25px; border-radius: 35px; width: 92%; max-width: 450px; z-index: 10; opacity: 0; transform: scale(0.9) translateY(40px); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; display: none; max-height: 95vh; overflow-y: auto; }
-        .container::-webkit-scrollbar { display: none; }
-        .container.show { display: block; opacity: 1; transform: scale(1) translateY(0); }
-
-        .img-wrapper { position: relative; width: 130px; height: 130px; margin: 0 auto 15px; }
-        .img-wrapper::before { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%; background: linear-gradient(45deg, #ff9a9e, #fecfef, #a18cd1); z-index: -1; animation: spinGlow 3s linear infinite; }
-        @keyframes spinGlow { 100% { transform: rotate(360deg); } }
-        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #1a1a2e; }
-
-        h1 { font-size: 1.9rem; color: #ff9a9e; font-weight: 700; margin-bottom: 5px; text-shadow: 0 2px 5px rgba(255,154,158,0.3); }
-        p.subtitle { font-size: 1.05rem; color: #ddd; margin-bottom: 25px; }
-
-        /* Live Timer (Enhanced) */
-        .love-timer { background: rgba(255,255,255,0.06); padding: 15px; border-radius: 20px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
-        .timer-title { font-weight: 600; color: #ff9a9e; font-size: 1rem; margin-bottom: 8px; letter-spacing: 1px; }
-        .timer-values { display: flex; justify-content: space-evenly; color: #fff; font-weight: 700; font-size: 1.3rem; font-family: 'Outfit'; }
-        .timer-values div { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 12px; }
-        .timer-label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; margin-top: 4px; font-family: 'Anek Bangla'; }
-
-        /* ===== Buttons Grid ===== */
-        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .btn-full { grid-column: span 2; }
-        .btn { padding: 18px 10px; border-radius: 22px; cursor: pointer; width: 100%; transition: 0.3s ease; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.1); }
-        .btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.4); border-color: rgba(255,154,158,0.4); }
-        .btn:hover .ios-icon { transform: scale(1.2) rotate(10deg); }
-        .btn span { color: #f0f0f0; font-weight: 500; font-size: 1rem; }
-        .btn-horizontal { flex-direction: row; padding: 20px; gap: 18px; }
-
-        /* ===== Modals ===== */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.4s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { border-radius: 35px; width: 92%; max-width: 420px; padding: 40px 30px; transform: scale(0.8); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; text-align: center; background: #1a1a2e; box-shadow: 0 25px 60px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.15); max-height: 85vh; overflow-y: auto; }
-        .modal-content::-webkit-scrollbar { display: none; }
-        .modal-overlay.active .modal-content { transform: scale(1); }
         
-        .close-btn { position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.08); cursor: pointer; border-radius: 50%; width: 38px; height: 38px; border: none; transition: 0.3s; z-index: 10; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.2rem; }
-        .close-btn:hover { background: #ff6b81; transform: rotate(90deg) scale(1.1); }
-        .modal-title { color: #ff9a9e; font-weight: 700; font-size: 1.6rem; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .trail { position: absolute; width: 8px; height: 8px; background: #ff9a9e; border-radius: 50%; pointer-events: none; z-index: 100; box-shadow: 0 0 15px #ff9a9e; animation: fadeTrail 1s linear forwards; }
+        @keyframes fadeTrail { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
 
-        /* Contract Modal Specifics */
-        .contract-paper { background: #fffdf9; color: #444; padding: 25px; border-radius: 15px; text-align: left; font-family: 'Anek Bangla'; border: 2px dashed #dcbca4; box-shadow: inset 0 0 30px rgba(220,188,164,0.3); }
-        .contract-title { text-align: center; font-family: 'Dancing Script', cursive; font-size: 2rem; color: #8c5260; margin-bottom: 15px; font-weight: 700; border-bottom: 1px solid #dcbca4; padding-bottom: 10px; }
-        .contract-rules { font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px; font-weight: 500; }
-        .sign-btn { background: #ff6b81; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer; width: 100%; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,107,129,0.4); }
-        .sign-btn:hover { background: #d6336c; transform: translateY(-3px); }
+        /* ===== Screen 1: Fingerprint Lock Screen ===== */
+        #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding-bottom: 80px; }
+        .lock-time { position: absolute; top: 15%; text-align: center; width: 100%; }
+        .lock-time h1 { font-family: 'Outfit', sans-serif; font-size: 5rem; font-weight: 300; margin-bottom: -10px; color: rgba(255,255,255,0.9); }
+        .lock-time p { font-size: 1.2rem; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
 
-        /* Fog, Runaway & Slot UI */
-        .fog-container { position: relative; width: 100%; height: 250px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 25px; }
-        .secret-letter { font-size: 1.15rem; color: #5a463a; font-weight: 600; line-height: 1.5; }
+        .fp-wrapper { position: relative; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; }
+        .fp-ripple { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #00ffcc; opacity: 0; box-shadow: 0 0 20px #00ffcc; }
+        .scanning .fp-ripple { animation: rippleAnim 1.5s infinite linear; }
+        @keyframes rippleAnim { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }
+        
+        .fp-sensor { position: relative; width: 80px; height: 80px; border-radius: 50%; border: 2px solid rgba(0, 255, 204, 0.3); background: rgba(0,255,204,0.05); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; overflow: hidden; z-index: 2; box-shadow: 0 0 20px rgba(0,255,204,0.1); }
+        .fp-sensor:active { transform: scale(0.92); background: rgba(0,255,204,0.2); }
+        .fp-sensor img { width: 50px; filter: invert(1) drop-shadow(0 0 5px #00ffcc); opacity: 0.7; transition: 0.3s; }
+        .scanning .fp-sensor img { opacity: 1; filter: invert(1) sepia(1) saturate(5) hue-rotate(130deg) drop-shadow(0 0 10px #00ffcc); }
+        .scan-line { position: absolute; top: -10%; left: 0; width: 100%; height: 3px; background: #00ffcc; box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc; display: none; }
+        .scanning .scan-line { display: block; animation: fpScan 1.2s infinite ease-in-out; }
+        @keyframes fpScan { 0% { top: -10%; } 50% { top: 100%; } 100% { top: -10%; } }
+        
+        #unlock-msg { margin-top: 30px; font-size: 1.1rem; color: #888; font-weight: 500; font-family: 'Outfit'; }
+        .success-text { color: #00e676 !important; font-weight: 600; text-shadow: 0 0 15px rgba(0,230,118,0.6); }
+
+        /* ===== Screen 2: App Dashboard ===== */
+        #dashboard { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 40px 20px; opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; pointer-events: none; }
+        #dashboard.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+        /* Widgets Area */
+        .widget-row { display: flex; gap: 15px; margin-bottom: 25px; }
+        
+        /* Profile Widget */
+        .profile-widget { flex: 1; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .profile-img-wrap { width: 75px; height: 75px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #ff9a9e, #fecfef); margin-bottom: 10px; }
+        .profile-img-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #1a1a2e; }
+        .profile-widget h2 { font-size: 1.3rem; color: #ff9a9e; margin-bottom: 2px; }
+        .profile-widget p { font-size: 0.85rem; color: #ccc; }
+
+        /* Timer Widget */
+        .timer-widget { flex: 1.2; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+        .timer-widget h3 { font-size: 0.95rem; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .timer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .t-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 8px 5px; text-align: center; }
+        .t-val { font-size: 1.2rem; font-weight: 700; color: #ff9a9e; font-family: 'Outfit'; }
+        .t-lbl { font-size: 0.6rem; color: #aaa; text-transform: uppercase; }
+
+        /* Welcome Text */
+        .greeting { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 5px; line-height: 1.2; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .greeting-sub { font-size: 1.1rem; color: #ddd; margin-bottom: auto; }
+
+        /* ===== iOS Bottom Dock (App Menu) ===== */
+        .bottom-dock { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 20px 40px; border-radius: 40px 40px 0 0; border-bottom: none; z-index: 10; }
+        .dock-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 5px; margin: 0 auto 20px; }
+        
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
+        .app-item:active { transform: scale(0.9); }
+        .app-icon { width: 60px; height: 60px; border-radius: 18px; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; margin-bottom: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .app-item:hover .app-icon { background: rgba(255,255,255,0.25); border-color: rgba(255,154,158,0.5); }
+        .app-icon img { width: 32px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+        .app-label { font-size: 0.75rem; color: #eee; font-weight: 500; text-align: center; line-height: 1.1; }
+
+        /* ===== iOS Style Action Sheets (Modals) ===== */
+        .ios-sheet-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s ease; }
+        .ios-sheet-overlay.active { opacity: 1; visibility: visible; }
+        
+        .ios-sheet { position: absolute; bottom: 0; left: 0; width: 100%; max-height: 90vh; background: rgba(30, 20, 45, 0.95); backdrop-filter: blur(25px); border-radius: 35px 35px 0 0; padding: 20px 25px 40px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); border-top: 1px solid rgba(255,255,255,0.15); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); overflow-y: auto; }
+        .ios-sheet::-webkit-scrollbar { display: none; }
+        .ios-sheet-overlay.active .ios-sheet { transform: translateY(0); }
+        
+        .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .sheet-title { font-size: 1.4rem; font-weight: 700; color: #ff9a9e; display: flex; align-items: center; gap: 8px; }
+        .sheet-close { background: rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; color: #fff; cursor: pointer; border: none; font-size: 1.1rem; }
+        
+        /* Modals Inner UI */
+        .contract-paper { background: #fffdf9; color: #444; padding: 20px; border-radius: 20px; font-family: 'Anek Bangla'; border: 1px solid #dcbca4; }
+        .contract-title { text-align: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: #8c5260; margin-bottom: 10px; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
+        .contract-rules { font-size: 1rem; line-height: 1.5; margin-bottom: 20px; font-weight: 500; }
+        
+        .fog-container { position: relative; width: 100%; height: 220px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .secret-letter { font-size: 1.1rem; color: #5a463a; font-weight: 600; text-align: center; }
         #fogCanvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; }
 
-        .runaway-container { position: relative; width: 100%; height: 220px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 14px 28px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; font-family: 'Outfit'; border: none; cursor: pointer; transition: 0.2s ease; box-shadow: 0 5px 15px rgba(255,107,129,0.5); font-size: 1.1rem; }
+        .runaway-container { position: relative; width: 100%; height: 200px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 12px 25px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; border: none; cursor: pointer; transition: 0.2s ease; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(255,107,129,0.5); }
 
-        .slot-machine { font-size: 1.6rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; margin: 20px 0; min-height: 90px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
-        .action-btn { width: 100%; padding: 16px; border-radius: 30px; background: #ff9a9e; color: #1a1a2e; font-weight: bold; border: none; font-size: 1.2rem; cursor: pointer; box-shadow: 0 8px 20px rgba(255,154,158,0.3); transition: 0.3s; }
-        .action-btn:hover { background: #ff6b81; color: #fff; transform: translateY(-3px); }
+        .slot-machine { font-size: 1.5rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; margin-bottom: 15px; min-height: 90px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
         
-        .audio-player-container { background: rgba(255,255,255,0.05); border-radius: 25px; padding: 25px; margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1);}
-        audio { width: 100%; height: 45px; outline: none; }
+        .action-btn { width: 100%; padding: 15px; border-radius: 25px; background: #ff9a9e; color: #1a1a2e; font-weight: bold; border: none; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
+        .action-btn:active { transform: scale(0.95); }
         
-        .music-btn { position: fixed; bottom: 30px; right: 30px; width: 55px; height: 55px; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: 0.3s; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .audio-player-container { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1);}
+        audio { width: 100%; height: 40px; outline: none; }
+
+        /* Universal Music Toggle */
+        .music-btn { position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: 0.3s; display: none; }
         .music-btn.playing { animation: pulseMusic 2s infinite; border-color: #ff6b81; }
-        @keyframes pulseMusic { 0% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0.6); } 70% { box-shadow: 0 0 0 20px rgba(255, 107, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0); } }
+        @keyframes pulseMusic { 0% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(255, 107, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 107, 129, 0); } }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop><source src="song.mp3" type="audio/mpeg"></audio>
+<div class="app-container">
 
-    <div class="music-btn" id="musicToggle" onclick="toggleMusic()" style="display: none;">
-        <img src="https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png" class="ios-emoji" style="width: 28px;" alt="Music">
+    <!-- Global Background Audio -->
+    <audio id="bgMusic" loop><source src="song.mp3" type="audio/mpeg"></audio>
+    <div class="music-btn glass" id="musicToggle" onclick="toggleMusic()">
+        <img src="https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png" class="ios-emoji" alt="Music">
     </div>
 
     <div class="floating-container" id="fxContainer"></div>
 
-    <!-- ===== Passcode Screen (Fingerprint) ===== -->
-    <div id="welcome-screen">
-        <h2 style="color: #fff; margin-bottom: 50px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase;">Identity Verification</h2>
-        <div class="fingerprint-container" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
-            <img src="https://em-content.zobj.net/source/apple/391/fingerprint_1f5a5.png" style="width: 80px; filter: invert(1); opacity: 0.8;" alt="FP">
-            <div class="scan-line"></div>
+    <!-- ===== Lock Screen (Biometric Unlock) ===== -->
+    <div id="lock-screen">
+        <div class="lock-time">
+            <h1 id="clockTime">--:--</h1>
+            <p id="clockDate">Thursday, July 2</p>
+        </div>
+        
+        <div class="fp-wrapper">
+            <div class="fp-ripple"></div>
+            <div class="fp-sensor" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+                <img src="https://em-content.zobj.net/source/apple/391/fingerprint_1f5a5.png" alt="FP">
+                <div class="scan-line"></div>
+            </div>
         </div>
         <p id="unlock-msg">Press & Hold to Unlock</p>
     </div>
 
-    <!-- ===== Main Card ===== -->
-    <div class="container glass-panel" id="main-card">
-        <div class="img-wrapper"><img src="jyoti.jpeg" alt="Jyoti" class="profile-img"></div>
+    <!-- ===== Dashboard (Main App Screen) ===== -->
+    <div id="dashboard">
         
-        <h1 id="typewriterText"></h1>
-        <p class="subtitle">Welcome to your secret universe <img src="https://em-content.zobj.net/source/apple/391/sparkles_2728.png" class="ios-emoji"></p>
-        
-        <!-- Live Timer -->
-        <div class="love-timer">
-            <div class="timer-title">প্রথম কথার পর থেকে আমাদের সময় <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" class="ios-emoji"></div>
-            <div class="timer-values" id="liveTimer">
-                <div><span id="t-days">0</span><span class="timer-label">দিন</span></div>
-                <div><span id="t-hours">00</span><span class="timer-label">ঘণ্টা</span></div>
-                <div><span id="t-mins">00</span><span class="timer-label">মিনিট</span></div>
-                <div><span id="t-secs">00</span><span class="timer-label">সেকেন্ড</span></div>
+        <div class="widget-row">
+            <!-- Profile Widget -->
+            <div class="profile-widget glass">
+                <div class="profile-img-wrap"><img src="jyoti.jpeg" alt="Jyoti"></div>
+                <h2>জ্যোতি</h2>
+                <p>My Universe ✨</p>
             </div>
-        </div>
-
-        <!-- Master Buttons Grid -->
-        <div class="btn-grid">
             
-            <!-- NEW: Love Contract -->
-            <div class="btn btn-full btn-horizontal" onclick="openModal('contractModal')">
-                <img src="https://em-content.zobj.net/source/apple/391/scroll_1f4dc.png" class="ios-icon" alt="Contract">
-                <span style="font-size: 1.1rem; font-weight: 600;">আমাদের ভালোবাসার চুক্তিপত্র 📝</span>
-            </div>
-
-            <!-- Voice Note -->
-            <div class="btn btn-full btn-horizontal" onclick="openModal('voiceModal')">
-                <img src="https://em-content.zobj.net/source/apple/391/headphone_1f3a7.png" class="ios-icon" alt="Voice">
-                <span>আমার একটি সিক্রেট মেসেজ শোনো</span>
-            </div>
-
-            <!-- Fog Wipe -->
-            <div class="btn btn-full btn-horizontal" onclick="openModal('fogModal'); initFog();">
-                <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-icon" alt="Snow">
-                <span>শীতের কুয়াশা মুছুন</span>
-            </div>
-
-            <!-- Runaway Button -->
-            <div class="btn btn-full btn-horizontal" onclick="openModal('runawayModal'); resetRunaway();">
-                <img src="https://em-content.zobj.net/source/apple/391/face-holding-back-tears_1f979.png" class="ios-icon" alt="Tears">
-                <span>একটি ছোট্ট প্রশ্ন...</span>
-            </div>
-
-            <!-- Date Spinner -->
-            <div class="btn btn-full btn-horizontal" onclick="openModal('dateDeciderModal')">
-                <img src="https://em-content.zobj.net/source/apple/391/clinking-glasses_1f942.png" class="ios-icon" alt="Date">
-                <span>আজকের ডেটে আমরা কী করবো?</span>
-            </div>
-
-            <!-- Small Buttons -->
-            <div class="btn" onclick="openModal('giftModal')">
-                <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-icon" alt="Gift"><span>সারপ্রাইজ</span>
-            </div>
-            <div class="btn" onclick="openModal('loveMeterModal')">
-                <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-icon" alt="Hearts"><span>লাভ মিটার</span>
-            </div>
-            <div class="btn" onclick="triggerRoseRain()">
-                <img src="https://em-content.zobj.net/source/apple/391/rose_1f339.png" class="ios-icon" alt="Rose"><span>পুষ্পবৃষ্টি</span>
-            </div>
-            <div class="btn" onclick="releaseLanterns()">
-                <img src="https://em-content.zobj.net/source/apple/391/red-paper-lantern_1f3ee.png" class="ios-icon" alt="Lantern"><span>ফানুস উড়াও</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== All Modals ===== -->
-
-    <!-- NEW: Love Contract Modal -->
-    <div class="modal-overlay" id="contractModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('contractModal')">✖</button>
-            <div class="contract-paper">
-                <div class="contract-title">ভালোবাসার চুক্তিপত্র</div>
-                <div class="contract-rules">
-                    আমি, <b>জ্যোতি</b>, সজ্ঞানে এই চুক্তিপত্রে মেনে নিচ্ছি যে:<br><br>
-                    ১. আমাকে সবসময় স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
-                    ২. আমি যত রাগই করি না কেন, শেষমেশ আমাকেই আদর করে মানাতে হবে।<br>
-                    ৩. যেকোনো পরিস্থিতিতে আমরা একে অপরের হাত শক্ত করে ধরে রাখবো।<br><br>
-                    <i>* এই চুক্তি আজীবন মেয়াদের জন্য প্রযোজ্য।</i>
+            <!-- Live Timer Widget -->
+            <div class="timer-widget glass">
+                <h3>Our Time <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" class="ios-emoji"></h3>
+                <div class="timer-grid">
+                    <div class="t-box"><div class="t-val" id="t-days">0</div><div class="t-lbl">Days</div></div>
+                    <div class="t-box"><div class="t-val" id="t-hours">00</div><div class="t-lbl">Hours</div></div>
+                    <div class="t-box"><div class="t-val" id="t-mins">00</div><div class="t-lbl">Mins</div></div>
+                    <div class="t-box"><div class="t-val" id="t-secs">00</div><div class="t-lbl">Secs</div></div>
                 </div>
-                <button class="sign-btn" id="agreeBtn" onclick="signContract()">আমি রাজি (I Agree) ❤️</button>
+            </div>
+        </div>
+
+        <div class="greeting" id="typewriterText"></div>
+        <p class="greeting-sub">কী সারপ্রাইজ দেখবে আজ?</p>
+
+        <!-- iOS Bottom App Dock -->
+        <div class="bottom-dock glass">
+            <div class="dock-indicator"></div>
+            <div class="app-grid">
+                
+                <div class="app-item" onclick="openSheet('contractSheet')">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/scroll_1f4dc.png"></div>
+                    <span class="app-label">চুক্তিপত্র</span>
+                </div>
+                <div class="app-item" onclick="openSheet('voiceSheet')">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/headphone_1f3a7.png"></div>
+                    <span class="app-label">ভয়েস নোট</span>
+                </div>
+                <div class="app-item" onclick="openSheet('fogSheet'); initFog();">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png"></div>
+                    <span class="app-label">সিক্রেট চিঠি</span>
+                </div>
+                <div class="app-item" onclick="openSheet('runawaySheet'); resetRunaway();">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/face-holding-back-tears_1f979.png"></div>
+                    <span class="app-label">মিস করো?</span>
+                </div>
+                
+                <div class="app-item" onclick="openSheet('dateSheet')">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/clinking-glasses_1f942.png"></div>
+                    <span class="app-label">ডেট স্পিনার</span>
+                </div>
+                <div class="app-item" onclick="openSheet('giftSheet')">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png"></div>
+                    <span class="app-label">উপহার</span>
+                </div>
+                <div class="app-item" onclick="openSheet('meterSheet')">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png"></div>
+                    <span class="app-label">লাভ মিটার</span>
+                </div>
+                <div class="app-item" onclick="triggerRoseRain(); triggerLanterns();">
+                    <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/sparkles_2728.png"></div>
+                    <span class="app-label">ম্যাজিক</span>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Voice Note Modal -->
-    <div class="modal-overlay" id="voiceModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('voiceModal')">✖</button>
-            <h2 class="modal-title">সিক্রেট মেসেজ <img src="https://em-content.zobj.net/source/apple/391/headphone_1f3a7.png" class="ios-emoji"></h2>
-            <p style="color: #ddd;">চোখ বন্ধ করো আর প্লে বাটনে চাপ দাও...</p>
+    <!-- ===== All iOS Action Sheets (Modals) ===== -->
+
+    <!-- Contract Sheet -->
+    <div class="ios-sheet-overlay" id="contractSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">চুক্তিপত্র <img src="https://em-content.zobj.net/source/apple/391/pen_1f58a-fe0f.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('contractSheet')">✖</button>
+            </div>
+            <div class="contract-paper">
+                <div class="contract-title">ভালোবাসার চুক্তি</div>
+                <div class="contract-rules">
+                    আমি, <b>জ্যোতি</b>, সজ্ঞানে মেনে নিচ্ছি যে:<br><br>
+                    ১. আমাকে সবসময় স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
+                    ২. আমি যত রাগই করি, আমাকেই আদর করে মানাতে হবে।<br>
+                    ৩. আমরা একে অপরের হাত সবসময় শক্ত করে ধরে রাখবো।<br>
+                </div>
+                <button class="action-btn" id="agreeBtn" onclick="signContract()" style="margin-top: 10px;">আমি রাজি ❤️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Note Sheet -->
+    <div class="ios-sheet-overlay" id="voiceSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">ভয়েস মেসেজ <img src="https://em-content.zobj.net/source/apple/391/microphone_1f3a4.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('voiceSheet')">✖</button>
+            </div>
+            <p style="color: #ccc; text-align: center;">প্লে বাটনে চাপ দাও...</p>
             <div class="audio-player-container">
-                <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width: 55px;">
+                <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width: 50px;">
                 <audio controls id="secretAudio"><source src="voice_message.mp3" type="audio/mpeg"></audio>
             </div>
         </div>
     </div>
 
-    <!-- Fog Wipe Modal -->
-    <div class="modal-overlay" id="fogModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('fogModal')">✖</button>
-            <h2 class="modal-title">কাঁচ পরিষ্কার করো!</h2>
-            <p style="color: #ddd; margin-bottom: 20px;">আঙুল দিয়ে স্ক্রিন ঘষে কুয়াশা সরিয়ে ফেলো...</p>
+    <!-- Fog Sheet -->
+    <div class="ios-sheet-overlay" id="fogSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">কুয়াশা মুছুন <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('fogSheet')">✖</button>
+            </div>
             <div class="fog-container">
-                <div class="secret-letter">আমার প্রিয় জ্যোতি, <br><br>তুমি আমার জীবনের সেই আলো, যা আমার সব অন্ধকার দূর করে দিয়েছে। আমি তোমাকে অনেক ভালোবাসি! ❤️</div>
-                <canvas id="fogCanvas" width="360" height="250"></canvas>
+                <div class="secret-letter">আমার প্রিয় জ্যোতি,<br><br>তুমি আমার জীবনের আলো। আমি তোমাকে অনেক ভালোবাসি! ❤️</div>
+                <canvas id="fogCanvas" width="340" height="220"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Runaway Button Modal -->
-    <div class="modal-overlay" id="runawayModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('runawayModal')">✖</button>
-            <h2 class="modal-title">সত্যি করে বলবে! <img src="https://em-content.zobj.net/source/apple/391/eyes_1f440.png" class="ios-emoji"></h2>
-            <p style="color: #fff; font-size: 1.2rem;">তুমি কি আমাকে মিস করো?</p>
+    <!-- Runaway Sheet -->
+    <div class="ios-sheet-overlay" id="runawaySheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">সত্যি বলবে! <img src="https://em-content.zobj.net/source/apple/391/eyes_1f440.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('runawaySheet')">✖</button>
+            </div>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 10px;">তুমি কি আমাকে মিস করো?</p>
             <div class="runaway-container" id="chaseArea">
                 <button class="chase-btn" id="runBtn" onmouseover="dodgeButton()" ontouchstart="dodgeButton()" onclick="caughtButton()">হ্যাঁ, অনেক! 🥺</button>
             </div>
-            <p id="catchResult" style="color: #00e676; margin-top: 20px; font-weight: bold; display: none; font-size: 1.3rem;">আমিও তোমাকে অনেক মিস করি! ❤️</p>
+            <p id="catchResult" style="color: #00e676; text-align: center; margin-top: 20px; font-weight: bold; display: none; font-size: 1.3rem;">আমিও অনেক মিস করি! ❤️</p>
         </div>
     </div>
 
-    <!-- Date Spinner Modal -->
-    <div class="modal-overlay" id="dateDeciderModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('dateDeciderModal')">✖</button>
-            <h2 class="modal-title">ডেট স্পিনার 🎲</h2>
+    <!-- Date Spinner Sheet -->
+    <div class="ios-sheet-overlay" id="dateSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">ডেট স্পিনার 🎲</div>
+                <button class="sheet-close" onclick="closeSheet('dateSheet')">✖</button>
+            </div>
             <div class="slot-machine" id="slotText">স্পিন করতে ট্যাপ করো!</div>
             <button class="action-btn" id="spinBtn" onclick="startSpinning()">স্পিন করো</button>
         </div>
     </div>
 
-    <!-- Gift Modal -->
-    <div class="modal-overlay" id="giftModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('giftModal')">✖</button>
-            <h2 class="modal-title">উপহার <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-emoji"></h2>
-            <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 150px; cursor: pointer; transition: 0.3s; margin: 15px 0;" onclick="openGift()">
-            <p id="giftText" style="color: #ddd; font-weight: 600; font-size: 1.2rem;">খুলতে বক্সে ট্যাপ করো!</p>
-            <div id="hiddenGift" style="display: none; margin-top: 20px;">
-                <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 85px; margin-bottom: 15px;">
-                <p style="color: #ff9a9e; font-size: 1.6rem; font-weight: 700;">অনেক অনেক ভালোবাসা! <img src="https://em-content.zobj.net/source/apple/391/sparkling-heart_1f496.png" class="ios-emoji"></p>
+    <!-- Gift Sheet -->
+    <div class="ios-sheet-overlay" id="giftSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">উপহার <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('giftSheet')">✖</button>
+            </div>
+            <div style="text-align: center;">
+                <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 140px; cursor: pointer; transition: 0.3s; margin: 10px 0;" onclick="openGift()">
+                <p id="giftText" style="color: #ccc; font-weight: 500;">বক্সে ট্যাপ করো!</p>
+                <div id="hiddenGift" style="display: none; margin-top: 15px;">
+                    <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 70px; margin-bottom: 10px;">
+                    <p style="color: #ff9a9e; font-size: 1.5rem; font-weight: 700;">অনেক ভালোবাসা! ❤️</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Love Meter Modal -->
-    <div class="modal-overlay" id="loveMeterModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('loveMeterModal')">✖</button>
-            <h2 class="modal-title">লাভ মিটার <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-emoji"></h2>
-            <div style="font-size: 4rem; color: #ff9a9e; font-weight: 700; font-family: 'Outfit';" id="meterValue">0%</div>
-            <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 30px 0; height: 28px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 30px; transition: 0.1s;" id="meterFill"></div></div>
+    <!-- Meter Sheet -->
+    <div class="ios-sheet-overlay" id="meterSheet">
+        <div class="ios-sheet">
+            <div class="sheet-header">
+                <div class="sheet-title">লাভ মিটার <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-emoji"></div>
+                <button class="sheet-close" onclick="closeSheet('meterSheet')">✖</button>
+            </div>
+            <div style="font-size: 4rem; color: #ff9a9e; font-weight: 700; text-align: center; font-family: 'Outfit';" id="meterValue">0%</div>
+            <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 20px 0; height: 25px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 30px; transition: 0.1s;" id="meterFill"></div></div>
             <button class="action-btn" id="calcLoveBtn" onclick="calculateLove()">হিসাব করো</button>
-            <div id="loveResult" style="display: none; margin-top: 25px; color: #00e676; font-size: 1.4rem; font-weight: 700;">তোমার প্রতি ভালোবাসা অসীম! <img src="https://em-content.zobj.net/source/apple/391/infinity_267e-fe0f.png" class="ios-emoji"></div>
+            <div id="loveResult" style="display: none; text-align: center; margin-top: 20px; color: #00e676; font-size: 1.3rem; font-weight: 700;">ভালোবাসা অসীম! ♾️</div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+    // System Clock for Lockscreen
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('clockTime').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('clockDate').innerText = now.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'});
+    }, 1000);
+
+    // Magic Dust FX
+    const appContainer = document.querySelector('.app-container');
+    appContainer.addEventListener('mousemove', function(e) { createDust(e.clientX, e.clientY); });
+    appContainer.addEventListener('touchmove', function(e) { createDust(e.touches[0].clientX, e.touches[0].clientY); });
+    function createDust(x, y) {
+        if(Math.random() > 0.4) return; 
+        let dust = document.createElement('div');
+        dust.className = 'trail';
+        dust.style.left = x + 'px'; dust.style.top = y + 'px';
+        appContainer.appendChild(dust);
+        setTimeout(() => { dust.remove(); }, 1000);
+    }
+
+    // Advanced Fingerprint & App Launch
+    let scanTimer;
+    let musicPlaying = false;
+    const msg = document.getElementById('unlock-msg');
+    const scanner = document.getElementById('fpScanner');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggle');
     
-    <script>
-        // Magic Dust Cursor
-        document.addEventListener('mousemove', function(e) { createDust(e.pageX, e.pageY); });
-        document.addEventListener('touchmove', function(e) { createDust(e.touches[0].pageX, e.touches[0].pageY); });
-        function createDust(x, y) {
-            if(Math.random() > 0.4) return; 
-            let dust = document.createElement('div');
-            dust.className = 'trail';
-            dust.style.left = x + 'px'; dust.style.top = y + 'px';
-            document.body.appendChild(dust);
-            setTimeout(() => { dust.remove(); }, 1000);
-        }
-
-        // Fingerprint Logic & Music
-        let scanTimer;
-        let musicPlaying = false;
-        const msg = document.getElementById('unlock-msg');
-        const scanner = document.getElementById('fpScanner');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicToggle');
+    function startScan() {
+        msg.innerText = "Scanning Biometrics..."; msg.style.color = "#00ffcc";
+        scanner.parentElement.classList.add('scanning');
         
-        function startScan() {
-            msg.innerText = "Scanning Biometrics..."; msg.style.color = "#ff6b81";
-            scanner.classList.add('scanning');
+        scanTimer = setTimeout(() => {
+            scanner.parentElement.classList.remove('scanning');
+            msg.innerHTML = "Unlocked <img src='https://em-content.zobj.net/source/apple/391/check-mark-button_2705.png' class='ios-emoji'>";
+            msg.classList.add('success-text');
             
-            scanTimer = setTimeout(() => {
-                scanner.classList.remove('scanning');
-                msg.innerHTML = "Heartbeat Matched: Jyoti <img src='https://em-content.zobj.net/source/apple/391/check-mark-button_2705.png' class='ios-emoji'>";
-                msg.classList.add('success-text');
-                
-                bgMusic.play().catch(()=>{});
-                musicPlaying = true;
-                musicBtn.style.display = 'flex'; musicBtn.classList.add('playing');
-                
+            bgMusic.play().catch(()=>{});
+            musicPlaying = true;
+            musicBtn.style.display = 'flex'; musicBtn.classList.add('playing');
+            
+            setTimeout(() => {
+                document.getElementById('lock-screen').style.opacity = '0';
+                document.getElementById('lock-screen').style.transform = 'translateY(-20px) scale(1.05)';
                 setTimeout(() => {
-                    document.getElementById('welcome-screen').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('welcome-screen').style.display = 'none';
-                        document.getElementById('main-card').classList.add('show');
-                        typeWriter(); startLoveTimer();
-                        confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
-                    }, 800);
-                }, 1500);
-            }, 2500);
-        }
-
-        function stopScan() {
-            clearTimeout(scanTimer);
-            if(!msg.classList.contains('success-text')) {
-                scanner.classList.remove('scanning');
-                msg.innerText = "Scan Failed. Hold for 3s."; msg.style.color = "#ff4757";
-            }
-        }
-
-        function toggleMusic() {
-            if(musicPlaying) { bgMusic.pause(); musicBtn.classList.remove('playing'); musicBtn.style.opacity = '0.5'; } 
-            else { bgMusic.play(); musicBtn.classList.add('playing'); musicBtn.style.opacity = '1'; }
-            musicPlaying = !musicPlaying;
-        }
-
-        // Typewriter
-        const text = "আমার ভালোবাসা, জ্যোতি ";
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("typewriterText").innerHTML += text.charAt(i); i++;
-                setTimeout(typeWriter, 120);
-            } else { document.getElementById("typewriterText").innerHTML += `<img src="https://em-content.zobj.net/source/apple/391/sparkling-heart_1f496.png" class="ios-emoji" style="width:30px; height:30px;">`; }
-        }
-
-        // Live Timer Setup (Exactly 11 days, 21 hours ago from July 2, 2026, 3:01 PM)
-        // Which is June 20, 2026, 18:01:51 (6:01 PM)
-        const startDate = new Date(2026, 5, 20, 18, 1, 51).getTime(); // Note: Month is 0-indexed (5 = June)
-        
-        function startLoveTimer() {
-            setInterval(() => {
-                const diff = new Date().getTime() - startDate;
-                document.getElementById('t-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-                document.getElementById('t-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                document.getElementById('t-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById('t-secs').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                    document.getElementById('lock-screen').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('show');
+                    typeWriter(); startLoveTimer();
+                }, 600);
             }, 1000);
-        }
+        }, 2200);
+    }
 
-        // Modals Control
-        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
-        function closeModal(modalId) { 
-            document.getElementById(modalId).classList.remove('active'); 
-            if(modalId === 'voiceModal') document.getElementById('secretAudio').pause();
-            if(modalId === 'loveMeterModal') resetLoveMeter();
+    function stopScan() {
+        clearTimeout(scanTimer);
+        if(!msg.classList.contains('success-text')) {
+            scanner.parentElement.classList.remove('scanning');
+            msg.innerText = "Scan Failed. Hold Finger."; msg.style.color = "#ff4757";
         }
+    }
 
-        // Contract Sign Action
-        function signContract() {
-            const btn = document.getElementById('agreeBtn');
-            btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖";
-            btn.style.background = "#00e676";
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-            setTimeout(() => { closeModal('contractModal'); }, 2500);
+    function toggleMusic() {
+        if(musicPlaying) { bgMusic.pause(); musicBtn.classList.remove('playing'); musicBtn.style.background = 'rgba(255,255,255,0.1)'; } 
+        else { bgMusic.play(); musicBtn.classList.add('playing'); musicBtn.style.background = 'rgba(255,107,129,0.2)'; }
+        musicPlaying = !musicPlaying;
+    }
+
+    // Typewriter Greeting
+    const text = "হ্যালো, জ্যোতি ";
+    let i = 0;
+    function typeWriter() {
+        if (i < text.length) {
+            document.getElementById("typewriterText").innerHTML += text.charAt(i); i++;
+            setTimeout(typeWriter, 120);
+        } else { document.getElementById("typewriterText").innerHTML += `<img src="https://em-content.zobj.net/source/apple/391/sparkling-heart_1f496.png" class="ios-emoji">`; }
+    }
+
+    // Accurate Live Timer (Starts 11 days, 21 hours ago based on requested exact timeline)
+    const startDate = new Date(2026, 5, 20, 18, 32, 0).getTime(); 
+    function startLoveTimer() {
+        setInterval(() => {
+            const diff = new Date().getTime() - startDate;
+            document.getElementById('t-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('t-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById('t-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById('t-secs').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    // iOS Sheet Modal Control
+    function openSheet(id) { document.getElementById(id).classList.add('active'); }
+    function closeSheet(id) { 
+        document.getElementById(id).classList.remove('active'); 
+        if(id === 'voiceSheet') document.getElementById('secretAudio').pause();
+        if(id === 'meterSheet') resetLoveMeter();
+    }
+
+    // Contract
+    function signContract() {
+        const btn = document.getElementById('agreeBtn');
+        btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖"; btn.style.background = "#00e676";
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.8 } });
+        setTimeout(() => { closeSheet('contractSheet'); }, 2000);
+    }
+
+    // Fog Wipe
+    function initFog() {
+        const canvas = document.getElementById('fogCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.96)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for(let k=0; k<300; k++) { ctx.fillStyle = "rgba(200, 200, 200, 0.4)"; ctx.beginPath(); ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2); ctx.fill(); }
+        ctx.font = "16px 'Anek Bangla'"; ctx.fillStyle = "#666"; ctx.textAlign = "center";
+        ctx.fillText("ঘষে কুয়াশা মুছুন ❄️", canvas.width/2, canvas.height/2);
+
+        let isDrawing = false;
+        ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.lineWidth = 40;
+        function getMousePos(evt) { const rect = canvas.getBoundingClientRect(); return { x: (evt.clientX || evt.touches[0].clientX) - rect.left, y: (evt.clientY || evt.touches[0].clientY) - rect.top }; }
+        function startWipe(e) { isDrawing = true; ctx.globalCompositeOperation = "destination-out"; const pos = getMousePos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
+        function wipe(e) { if (!isDrawing) return; const pos = getMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }
+        function stopWipe() { isDrawing = false; }
+        canvas.addEventListener('mousedown', startWipe); canvas.addEventListener('mousemove', wipe); canvas.addEventListener('mouseup', stopWipe);
+        canvas.addEventListener('touchstart', startWipe); canvas.addEventListener('touchmove', wipe); canvas.addEventListener('touchend', stopWipe);
+    }
+
+    // Runaway
+    let dodgeCount = 0;
+    function dodgeButton() {
+        if(dodgeCount < 4) {
+            const btn = document.getElementById('runBtn'); const area = document.getElementById('chaseArea');
+            btn.style.left = Math.floor(Math.random() * (area.clientWidth - btn.clientWidth - 20) + 10) + 'px';
+            btn.style.top = Math.floor(Math.random() * (area.clientHeight - btn.clientHeight - 20) + 10) + 'px';
+            btn.style.transform = 'none'; dodgeCount++;
         }
+    }
+    function caughtButton() { document.getElementById('runBtn').style.display = 'none'; document.getElementById('catchResult').style.display = 'block'; confetti({ particleCount: 100, origin: { y: 0.7 } }); }
+    function resetRunaway() { dodgeCount = 0; const btn = document.getElementById('runBtn'); btn.style.display = 'inline-block'; btn.style.top = '50%'; btn.style.left = '50%'; btn.style.transform = 'translate(-50%, -50%)'; document.getElementById('catchResult').style.display = 'none'; }
 
-        // Fog Window Logic
-        function initFog() {
-            const canvas = document.getElementById('fogCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.globalCompositeOperation = "source-over";
-            ctx.fillStyle = "rgba(255, 255, 255, 0.96)"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for(let k=0; k<400; k++) { ctx.fillStyle = "rgba(200, 200, 200, 0.3)"; ctx.beginPath(); ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2); ctx.fill(); }
-            ctx.font = "20px 'Anek Bangla'"; ctx.fillStyle = "#777"; ctx.textAlign = "center";
-            ctx.fillText("আঙুল দিয়ে ঘষে কুয়াশা মুছুন ❄️", canvas.width/2, canvas.height/2);
+    // Spinner
+    const dateIdeas = ['লং ড্রাইভ 🚗', 'ডিনার ডেট 🕯️', 'মুভি দেখা 🍿', 'ফুচকা ডেট 🤤', 'হাত ধরে হাঁটা 🤝'];
+    let spinning = false;
+    function startSpinning() {
+        if(spinning) return; spinning = true; const slot = document.getElementById('slotText'); let spins = 0;
+        const spinInterval = setInterval(() => {
+            slot.innerText = dateIdeas[Math.floor(Math.random() * dateIdeas.length)]; spins++;
+            if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: 1.8rem; color:#ff9a9e;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 80, origin: { y: 0.8 } }); }
+        }, 80);
+    }
 
-            let isDrawing = false;
-            ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.lineWidth = 45;
-            function getMousePos(evt) { const rect = canvas.getBoundingClientRect(); return { x: (evt.clientX || evt.touches[0].clientX) - rect.left, y: (evt.clientY || evt.touches[0].clientY) - rect.top }; }
-            function startWipe(e) { isDrawing = true; ctx.globalCompositeOperation = "destination-out"; const pos = getMousePos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
-            function wipe(e) { if (!isDrawing) return; const pos = getMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }
-            function stopWipe() { isDrawing = false; }
-            canvas.addEventListener('mousedown', startWipe); canvas.addEventListener('mousemove', wipe); canvas.addEventListener('mouseup', stopWipe);
-            canvas.addEventListener('touchstart', startWipe); canvas.addEventListener('touchmove', wipe); canvas.addEventListener('touchend', stopWipe);
+    // Gift & Meter
+    let giftOpened = false;
+    function openGift() {
+        if(!giftOpened) { giftOpened = true; document.getElementById('giftImg').src = "https://em-content.zobj.net/source/apple/391/party-popper_1f389.png"; document.getElementById('giftText').style.display = "none"; document.getElementById('hiddenGift').style.display = "block"; confetti({ particleCount: 150, origin: { y: 0.7 } }); }
+    }
+
+    let loveInterval;
+    function resetLoveMeter() { clearInterval(loveInterval); document.getElementById('meterFill').style.width = "0%"; document.getElementById('meterValue').innerText = "0%"; document.getElementById('loveResult').style.display = "none"; document.getElementById('calcLoveBtn').style.display = "block"; }
+    function calculateLove() {
+        document.getElementById('calcLoveBtn').style.display = "none"; let width = 0;
+        loveInterval = setInterval(() => {
+            if(width >= 100) { clearInterval(loveInterval); document.getElementById('meterValue').innerText = "অসীম!"; document.getElementById('loveResult').style.display = "block"; confetti({ particleCount: 150, origin: { y: 0.8 } }); } 
+            else { width += 2; document.getElementById('meterFill').style.width = width + "%"; document.getElementById('meterValue').innerText = width + "%"; }
+        }, 25);
+    }
+
+    // Magic FX (Roses & Lanterns)
+    function triggerRoseRain() {
+        const container = document.getElementById('fxContainer');
+        for(let i=0; i<25; i++) {
+            setTimeout(() => {
+                const petal = document.createElement('img'); petal.src = 'https://em-content.zobj.net/source/apple/391/rose_1f339.png'; petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + "vw"; petal.style.width = (Math.random() * 15 + 15) + "px"; petal.style.animationDuration = (Math.random() * 2 + 4) + "s";
+                container.appendChild(petal); setTimeout(() => { petal.remove(); }, 6000);
+            }, i * 150);
         }
+    }
 
-        // Runaway Button Logic
-        let dodgeCount = 0;
-        function dodgeButton() {
-            if(dodgeCount < 5) {
-                const btn = document.getElementById('runBtn'); const area = document.getElementById('chaseArea');
-                btn.style.left = Math.floor(Math.random() * (area.clientWidth - btn.clientWidth)) + 'px';
-                btn.style.top = Math.floor(Math.random() * (area.clientHeight - btn.clientHeight)) + 'px';
-                btn.style.transform = 'none'; dodgeCount++;
-            }
+    function triggerLanterns() {
+        const container = document.getElementById('fxContainer');
+        for(let i=0; i<8; i++) {
+            setTimeout(() => {
+                let lantern = document.createElement('img'); lantern.src = 'https://em-content.zobj.net/source/apple/391/red-paper-lantern_1f3ee.png';
+                lantern.style.position = 'absolute'; lantern.style.bottom = '-60px'; lantern.style.width = (Math.random() * 20 + 30) + 'px'; lantern.style.left = (Math.random() * 90) + 'vw';
+                lantern.style.filter = 'drop-shadow(0 10px 20px rgba(255, 100, 0, 0.8))'; lantern.style.transition = 'transform ' + (Math.random() * 3 + 6) + 's ease-in, opacity 2s';
+                container.appendChild(lantern);
+                setTimeout(() => { lantern.style.transform = `translateY(-120vh) translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 30 - 15}deg)`; }, 50);
+                setTimeout(() => { lantern.remove(); }, 9000);
+            }, i * 350);
         }
-        function caughtButton() { document.getElementById('runBtn').style.display = 'none'; document.getElementById('catchResult').style.display = 'block'; confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } }); }
-        function resetRunaway() { dodgeCount = 0; const btn = document.getElementById('runBtn'); btn.style.display = 'inline-block'; btn.style.top = '50%'; btn.style.left = '50%'; btn.style.transform = 'translate(-50%, -50%)'; document.getElementById('catchResult').style.display = 'none'; }
-
-        // Date Spinner Logic
-        const dateIdeas = ['লং ড্রাইভ 🚗', 'ক্যান্ডেল লাইট ডিনার 🕯️', 'মুভি দেখা 🍿', 'ফুচকা ডেট 🤤', 'হাত ধরে হাঁটা 🤝'];
-        let spinning = false;
-        function startSpinning() {
-            if(spinning) return; spinning = true; const slot = document.getElementById('slotText'); let spins = 0;
-            const spinInterval = setInterval(() => {
-                slot.innerText = dateIdeas[Math.floor(Math.random() * dateIdeas.length)]; spins++;
-                if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: 2rem;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
-            }, 100);
-        }
-
-        // Gift & Love Meter
-        let giftOpened = false;
-        function openGift() {
-            if(!giftOpened) {
-                giftOpened = true; document.getElementById('giftImg').src = "https://em-content.zobj.net/source/apple/391/party-popper_1f389.png"; 
-                document.getElementById('giftText').style.display = "none"; document.getElementById('hiddenGift').style.display = "block";
-                confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
-            }
-        }
-
-        let loveInterval;
-        function resetLoveMeter() { clearInterval(loveInterval); document.getElementById('meterFill').style.width = "0%"; document.getElementById('meterValue').innerText = "0%"; document.getElementById('loveResult').style.display = "none"; document.getElementById('calcLoveBtn').style.display = "block"; }
-        function calculateLove() {
-            document.getElementById('calcLoveBtn').style.display = "none"; let width = 0;
-            loveInterval = setInterval(() => {
-                if(width >= 100) { clearInterval(loveInterval); document.getElementById('meterValue').innerText = "অসীম!"; document.getElementById('loveResult').style.display = "block"; confetti({ particleCount: 250, spread: 120, origin: { y: 0.6 }, colors: ['#ffb6c1', '#d6336c'] }); } 
-                else { width += 2; document.getElementById('meterFill').style.width = width + "%"; document.getElementById('meterValue').innerText = width + "%"; }
-            }, 30);
-        }
-
-        // Rose Rain & Lanterns
-        function triggerRoseRain() {
-            const container = document.getElementById('fxContainer');
-            for(let i=0; i<35; i++) {
-                setTimeout(() => {
-                    const petal = document.createElement('img'); petal.src = 'https://em-content.zobj.net/source/apple/391/rose_1f339.png'; petal.classList.add('petal');
-                    petal.style.left = Math.random() * 100 + "vw"; petal.style.width = (Math.random() * 15 + 20) + "px"; petal.style.animationDuration = (Math.random() * 3 + 4) + "s";
-                    container.appendChild(petal); setTimeout(() => { petal.remove(); }, 7000);
-                }, i * 100);
-            }
-        }
-
-        function releaseLanterns() {
-            const container = document.getElementById('fxContainer');
-            for(let i=0; i<10; i++) {
-                setTimeout(() => {
-                    let lantern = document.createElement('img'); lantern.src = 'https://em-content.zobj.net/source/apple/391/red-paper-lantern_1f3ee.png';
-                    lantern.style.position = 'fixed'; lantern.style.bottom = '-60px'; lantern.style.width = (Math.random() * 25 + 40) + 'px'; lantern.style.left = (Math.random() * 90) + 'vw';
-                    lantern.style.filter = 'drop-shadow(0 15px 25px rgba(255, 100, 0, 0.7))'; lantern.style.transition = 'transform ' + (Math.random() * 4 + 7) + 's ease-in, opacity 2s';
-                    container.appendChild(lantern);
-                    setTimeout(() => { lantern.style.transform = `translateY(-120vh) translateX(${Math.random() * 150 - 75}px) rotate(${Math.random() * 40 - 20}deg)`; }, 50);
-                    setTimeout(() => { lantern.remove(); }, 10000);
-                }, i * 400);
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
