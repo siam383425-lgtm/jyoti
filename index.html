@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jyoti's iOS Universe</title>
+    <title>Jyoti's iPhone Universe</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600&family=Anek+Bangla:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ===== Global Setup & Responsive ===== */
+        /* ===== Global Setup & iPhone Frame ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body {
-            background: #000;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; height: 100dvh; /* Mobile browser support for dynamic height */
-            overflow: hidden;
+            background: #000; display: flex; justify-content: center; align-items: center;
+            height: 100vh; height: 100dvh; overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'Anek Bangla', 'Outfit', sans-serif;
             color: #fff;
         }
@@ -23,82 +21,111 @@
         .app-container {
             position: relative; width: 100vw; height: 100%; max-width: 430px; 
             background: linear-gradient(135deg, #1e152a, #2a1b38, #160d24);
-            overflow: hidden;
+            overflow: hidden; border-radius: 0; 
         }
 
-        /* ===== iOS Glassmorphism (Transparent System) ===== */
-        .ios-glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        /* ===== iOS Status Bar & Dynamic Island ===== */
+        .status-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 45px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 25px; z-index: 9999; font-weight: 600; font-size: 0.9rem; pointer-events: none;
+        }
+        .sb-time { width: 60px; }
+        
+        .dynamic-island {
+            width: 100px; height: 30px; background: #000; border-radius: 20px; 
+            display: flex; justify-content: space-between; align-items: center; padding: 0 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); transition: 0.3s;
         }
         
-        .ios-glass-dark {
-            background: rgba(20, 20, 20, 0.65);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .music-wave { display: flex; gap: 3px; align-items: center; opacity: 0; transition: 0.3s; }
+        .music-wave span { width: 3px; height: 10px; background: #ff6b81; border-radius: 2px; animation: waveAnim 1s infinite alternate; }
+        .music-wave span:nth-child(2) { animation-delay: 0.2s; }
+        .music-wave span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes waveAnim { 0% { height: 4px; } 100% { height: 15px; } }
+        
+        .sb-icons { display: flex; gap: 5px; align-items: center; pointer-events: auto; cursor: pointer; }
 
-        /* ===== Emojis & FX ===== */
+        /* ===== Push Notification ===== */
+        .ios-notification {
+            position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: rgba(30, 30, 30, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 15px; display: flex; gap: 15px; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9998; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .ios-notification.show { top: 55px; }
+        .notif-img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; }
+        .notif-text h4 { font-size: 1rem; color: #fff; margin-bottom: 2px; }
+        .notif-text p { font-size: 0.85rem; color: #ddd; }
+
+        /* ===== Control Center ===== */
+        .control-center {
+            position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            z-index: 9900; transition: 0.5s ease; display: flex; flex-direction: column; padding: 80px 20px 20px;
+        }
+        .control-center.active { top: 0; }
+        .cc-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .cc-box { flex: 1; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 10px; }
+        .cc-slider { width: 100%; -webkit-appearance: none; height: 30px; background: rgba(255,255,255,0.2); border-radius: 15px; outline: none; }
+        .cc-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+
+        /* ===== iOS Glassmorphism ===== */
+        .ios-glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
         .ios-emoji { width: clamp(1.2em, 4vw, 1.5em); height: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
-        .fx-container { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+        
+        .fx-container { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
         .petal { position: absolute; top: -10vh; z-index: 5; animation: fallPetal linear forwards; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
         @keyframes fallPetal { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
         /* ===== Screen 1: Lock Screen ===== */
         #lock-screen {
-            position: absolute; inset: 0; 
-            background: url('jyoti.jpeg') center/cover no-repeat;
+            position: absolute; inset: 0; background: url('jyoti.jpeg') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; 
-            z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding: 10vh 0 6vh;
+            z-index: 1000; transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding: 12vh 0 5vh;
         }
-        #lock-screen::before {
-            content: ''; position: absolute; inset: 0; 
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 0;
-        }
-        
+        #lock-screen::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 0; }
         .lock-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: space-between;}
         
         .lock-time { text-align: center; }
-        .lock-time h1 { font-family: 'Outfit', sans-serif; font-size: clamp(4rem, 15vw, 5.5rem); font-weight: 300; margin-bottom: -5px; color: #fff; }
-        .lock-time p { font-size: clamp(1rem, 4vw, 1.2rem); color: rgba(255,255,255,0.9); font-weight: 500; }
+        .lock-time h1 { font-family: 'Outfit', sans-serif; font-size: clamp(4.5rem, 16vw, 6rem); font-weight: 300; margin-bottom: -10px; color: #fff; }
+        .lock-time p { font-size: clamp(1.1rem, 4.5vw, 1.3rem); color: rgba(255,255,255,0.9); font-weight: 500; }
 
-        /* Premium Fingerprint Sticker */
-        .fp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .fp-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 2vh;}
         .fp-sensor { 
-            position: relative; width: 85px; height: 85px; border-radius: 50%; 
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; 
+            position: relative; width: 75px; height: 75px; border-radius: 50%; 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; 
             cursor: pointer; transition: 0.3s; overflow: hidden; box-shadow: 0 0 25px rgba(255, 107, 129, 0.2); 
         }
         .fp-sensor:active { transform: scale(0.92); background: rgba(255,107,129,0.15); border-color: #ff6b81; }
-        .fp-sensor img { width: 55px; opacity: 0.8; transition: 0.3s; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
-        
-        /* Glowing Scan Animation */
+        .fp-sensor img { width: 45px; opacity: 0.8; transition: 0.3s; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
         .scanning .fp-sensor img { opacity: 1; filter: drop-shadow(0 0 15px #ff6b81) brightness(1.5); }
         .scan-line { position: absolute; top: -10%; left: 0; width: 100%; height: 4px; background: #ff6b81; box-shadow: 0 0 20px #ff6b81, 0 0 40px #ff6b81; display: none; }
         .scanning .scan-line { display: block; animation: fpScan 1.2s infinite ease-in-out; }
         @keyframes fpScan { 0% { top: -10%; } 50% { top: 100%; } 100% { top: -10%; } }
-        
-        #unlock-msg { font-size: clamp(0.9rem, 3.5vw, 1rem); color: #ddd; font-weight: 500; font-family: 'Outfit'; letter-spacing: 1px; }
+        #unlock-msg { font-size: 1rem; color: #ddd; font-weight: 500; letter-spacing: 1px; }
 
-        /* ===== Screen 2: Home Dashboard ===== */
+        /* Lockscreen Shortcuts */
+        .lock-shortcuts { display: flex; justify-content: space-between; width: 85%; }
+        .shortcut-btn { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; transition: 0.2s; backdrop-filter: blur(10px); }
+        .shortcut-btn:active { transform: scale(1.2); background: #fff; color: #000; }
+        
+        #hidden-camera { position: absolute; inset: 0; background: #000; z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        #hidden-camera img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; }
+        #hidden-camera h2 { z-index: 1; color: #ff9a9e; font-size: 2rem; font-family: 'Dancing Script'; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+
+        /* ===== Screen 2: Dashboard (Home Screen) ===== */
         #dashboard { 
             position: absolute; inset: 0; display: flex; flex-direction: column; 
-            padding: 5vh 5vw 3vh; /* Optimized Padding */
-            opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            z-index: 5; pointer-events: none; 
-            justify-content: space-between; /* This prevents bottom cut-off */
+            padding: 8vh 5vw 3vh; opacity: 0; transform: scale(0.95); transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 5; pointer-events: none; justify-content: space-between;
         }
         #dashboard.show { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-        /* Top Widgets Area */
         .top-section { display: flex; flex-direction: column; gap: 2vh; }
         .widget-row { display: flex; gap: 4vw; height: auto; }
-        
         .profile-widget { flex: 1; border-radius: 25px; padding: 2vh 2vw; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .profile-img-wrap { width: clamp(55px, 15vw, 70px); height: clamp(55px, 15vw, 70px); border-radius: 50%; padding: 2px; background: linear-gradient(45deg, #ff9a9e, #fecfef); margin-bottom: 8px; }
         .profile-img-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -113,60 +140,105 @@
 
         .greeting { font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 700; color: #fff; line-height: 1.2; text-shadow: 0 4px 10px rgba(0,0,0,0.4); margin-top: 1vh;}
 
-        /* ===== iOS Floating Dock (Safe from cut-off) ===== */
-        .bottom-dock { 
-            width: 100%; padding: 18px 15px; border-radius: 35px; z-index: 10; 
-            display: flex; flex-direction: column; gap: 15px; 
-            margin-top: auto; /* Automatically pushes to bottom */
-        }
+        /* Floating Dock */
+        .bottom-dock { width: 100%; padding: 18px 15px; border-radius: 35px; z-index: 10; display: flex; flex-direction: column; gap: 15px; margin-top: auto; }
         .app-row { display: flex; justify-content: space-around; width: 100%; }
         .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; width: 22%; }
-        .app-item:active { transform: scale(0.9); }
+        .app-item:active { transform: scale(0.9); filter: brightness(0.7); }
         .app-icon { width: clamp(45px, 14vw, 55px); height: clamp(45px, 14vw, 55px); border-radius: 14px; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; margin-bottom: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
         .app-icon img { width: 55%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
         .app-label { font-size: clamp(0.6rem, 2.5vw, 0.75rem); color: #eee; font-weight: 500; text-align: center; white-space: nowrap;}
 
-        /* ===== Slide-up Modals (iOS Action Sheets) ===== */
-        .ios-sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s ease; }
-        .ios-sheet-overlay.active { opacity: 1; visibility: visible; }
+        /* ===== App Zoom-in Modals (Full Screen iOS App style) ===== */
+        .ios-app-screen { 
+            position: absolute; inset: 0; background: rgba(20, 15, 30, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 8000; display: flex; flex-direction: column; padding: 60px 20px 40px;
+            opacity: 0; transform: scale(0.5); pointer-events: none; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); 
+        }
+        .ios-app-screen.active { opacity: 1; transform: scale(1); pointer-events: auto; }
         
-        .ios-sheet { position: absolute; bottom: 0; left: 0; width: 100%; max-height: 85vh; border-radius: 35px 35px 0 0; padding: 25px 25px 40px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
-        .ios-sheet::-webkit-scrollbar { display: none; }
-        .ios-sheet-overlay.active .ios-sheet { transform: translateY(0); }
+        .app-header { display: flex; justify-content: center; align-items: center; margin-bottom: 30px; }
+        .app-title { font-size: 1.6rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
         
-        .dock-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 5px; margin: 0 auto 20px; }
-        .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .sheet-title { font-size: clamp(1.2rem, 5vw, 1.4rem); font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .sheet-close { background: rgba(255,255,255,0.15); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; color: #fff; cursor: pointer; border: none; font-size: 1rem; }
+        /* Swipe to Home Indicator */
+        .home-indicator { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(255,255,255,0.8); border-radius: 10px; cursor: pointer; }
+        .home-indicator-area { position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; cursor: pointer; z-index: 100;}
 
         /* Inner Content Scaling */
-        .contract-paper { background: rgba(255,255,255,0.95); color: #333; padding: 20px; border-radius: 20px; font-family: 'Anek Bangla'; }
-        .contract-title { text-align: center; font-family: 'Dancing Script'; font-size: 1.6rem; color: #d6336c; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px;}
-        .contract-rules { font-size: clamp(0.9rem, 3.5vw, 1rem); line-height: 1.5; margin-bottom: 15px; font-weight: 500; }
+        .contract-paper { background: rgba(255,255,255,0.95); color: #333; padding: 25px; border-radius: 20px; font-family: 'Anek Bangla'; }
+        .contract-title { text-align: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: #d6336c; font-weight: 700; border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 15px;}
+        .contract-rules { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; font-weight: 500; }
         
-        .fog-container { position: relative; width: 100%; height: 200px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .secret-letter { font-size: clamp(0.95rem, 4vw, 1.1rem); color: #5a463a; font-weight: 600; text-align: center; }
+        .fog-container { position: relative; width: 100%; height: 250px; border-radius: 20px; overflow: hidden; background: #fff; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .secret-letter { font-size: 1.1rem; color: #5a463a; font-weight: 600; text-align: center; }
         #fogCanvas { position: absolute; inset: 0; z-index: 5; cursor: pointer; width: 100%; height: 100%;}
 
-        .runaway-container { position: relative; width: 100%; height: 180px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; }
-        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 20px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; border: none; font-size: clamp(0.9rem, 3.5vw, 1rem); box-shadow: 0 5px 15px rgba(255,107,129,0.5); }
+        .runaway-container { position: relative; width: 100%; height: 250px; border-radius: 20px; background: rgba(0,0,0,0.3); overflow: hidden; }
+        .chase-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 12px 25px; border-radius: 30px; background: #ff6b81; color: #fff; font-weight: 600; border: none; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(255,107,129,0.5); }
 
-        .slot-machine { font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: 700; color: #fff; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 80px;}
-        .action-btn { width: 100%; padding: 14px; border-radius: 25px; background: rgba(255,255,255,0.2); color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); font-size: 1.1rem; cursor: pointer; transition: 0.2s; backdrop-filter: blur(5px);}
+        .slot-machine { font-size: 1.5rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 100px;}
+        .action-btn { width: 100%; padding: 16px; border-radius: 30px; background: rgba(255,255,255,0.2); color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); font-size: 1.2rem; cursor: pointer; transition: 0.2s; backdrop-filter: blur(5px);}
         .action-btn:active { transform: scale(0.96); background: rgba(255,107,129,0.8); }
 
-        /* Music Toggle */
-        .music-btn { position: absolute; top: 5vh; right: 5vw; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 100; transition: 0.3s; display: none; }
-        .music-btn.playing { border-color: #ff6b81; box-shadow: 0 0 15px rgba(255,107,129,0.5); }
+        .audio-player-container { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; gap: 20px; border: 1px solid rgba(255,255,255,0.2);}
+        audio { width: 100%; height: 45px; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
 
+    <!-- Global Background Audio -->
     <audio id="bgMusic" loop><source src="song.mp3" type="audio/mpeg"></audio>
-    <div class="music-btn ios-glass" id="musicToggle" onclick="toggleMusic()">
-        <img src="https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png" class="ios-emoji" alt="Music">
+
+    <!-- iOS Status Bar -->
+    <div class="status-bar">
+        <div class="sb-time" id="sbTime">12:00</div>
+        
+        <div class="dynamic-island" id="dynamicIsland">
+            <div style="width:10px;"></div> <!-- Spacer -->
+            <div class="music-wave" id="musicWave">
+                <span></span><span></span><span></span>
+            </div>
+            <div style="width:10px;"></div> <!-- Spacer -->
+        </div>
+        
+        <!-- Click Battery area to open Control Center -->
+        <div class="sb-icons" onclick="toggleControlCenter()">
+            <img src="https://em-content.zobj.net/source/apple/391/antenna-bars_1f4f6.png" style="width:14px; filter:invert(1);">
+            <img src="https://em-content.zobj.net/source/apple/391/battery_1f50b.png" style="width:20px; filter:invert(1);"> 11%
+        </div>
+    </div>
+
+    <!-- Push Notification -->
+    <div class="ios-notification" id="pushNotif" onclick="closeNotif()">
+        <img src="jyoti.jpeg" class="notif-img" alt="Jyoti">
+        <div class="notif-text">
+            <h4>Jyoti ❤️</h4>
+            <p>I miss you too! 🥺</p>
+        </div>
+    </div>
+
+    <!-- Control Center -->
+    <div class="control-center" id="controlCenter">
+        <h2 style="margin-bottom: 20px;">Control Center</h2>
+        <div class="cc-row">
+            <div class="cc-box" onclick="toggleMusic()">
+                <img src="https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png" class="ios-emoji">
+                <span id="ccMusicText">Play Music</span>
+            </div>
+            <div class="cc-box" onclick="triggerRoseRain()">
+                <img src="https://em-content.zobj.net/source/apple/391/rose_1f339.png" class="ios-emoji">
+                <span>Magic Petals</span>
+            </div>
+        </div>
+        <div class="cc-row" style="flex-direction: column;">
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; display:flex; align-items:center; gap:10px;">
+                <img src="https://em-content.zobj.net/source/apple/391/sun-with-face_1f31e.png" style="width:20px;">
+                <input type="range" min="1" max="100" value="80" class="cc-slider">
+            </div>
+        </div>
+        <button class="action-btn" onclick="toggleControlCenter()" style="margin-top:auto; background:rgba(255,255,255,0.2);">Close</button>
     </div>
 
     <div class="fx-container" id="fxContainer"></div>
@@ -174,25 +246,37 @@
     <!-- ===== Lock Screen ===== -->
     <div id="lock-screen">
         <div class="lock-content">
-            <div class="lock-time" style="margin-top: 5vh;">
+            <div class="lock-time" style="margin-top: 6vh;">
                 <h1 id="clockTime">--:--</h1>
                 <p id="clockDate">Loading...</p>
             </div>
             
-            <div class="fp-wrapper">
-                <div class="fp-sensor" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
-                    <!-- Beautiful Glowing Fingerprint Sticker from Flaticon -->
-                    <img src="https://cdn-icons-png.flaticon.com/512/5530/5530971.png" alt="FP">
-                    <div class="scan-line"></div>
+            <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
+                <div class="fp-wrapper">
+                    <div class="fp-sensor" id="fpScanner" onmousedown="startScan()" onmouseup="stopScan()" onmouseleave="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5530/5530971.png" alt="FP">
+                        <div class="scan-line"></div>
+                    </div>
+                    <p id="unlock-msg">Press & Hold to Unlock</p>
                 </div>
-                <p id="unlock-msg">Press & Hold to Unlock</p>
+                
+                <!-- Lockscreen Shortcuts -->
+                <div class="lock-shortcuts" style="margin-top: 3vh;">
+                    <div class="shortcut-btn" onclick="triggerLanterns()">🔦</div>
+                    <div class="shortcut-btn" onmousedown="showHiddenCam()" onmouseup="hideHiddenCam()" ontouchstart="showHiddenCam()" ontouchend="hideHiddenCam()">📷</div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Hidden Camera Screen -->
+    <div id="hidden-camera">
+        <img src="jyoti.jpeg" alt="Secret">
+        <h2>You are beautiful! ❤️</h2>
+    </div>
+
     <!-- ===== Dashboard / Home Screen ===== -->
     <div id="dashboard">
-        
         <div class="top-section">
             <div class="widget-row">
                 <div class="profile-widget ios-glass">
@@ -211,43 +295,42 @@
                     </div>
                 </div>
             </div>
-
             <div>
                 <div class="greeting" id="typewriterText"></div>
                 <p style="font-size: clamp(0.9rem, 3.5vw, 1rem); color: #ccc; margin-top: 5px;">কী সারপ্রাইজ দেখবে আজ?</p>
             </div>
         </div>
 
-        <!-- Safe iOS Floating Dock (Will never be cut off) -->
+        <!-- iOS Bottom Dock -->
         <div class="bottom-dock ios-glass">
             <div class="app-row">
-                <div class="app-item" onclick="openSheet('contractSheet')">
+                <div class="app-item" onclick="openApp('contractApp')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/scroll_1f4dc.png"></div>
                     <span class="app-label">চুক্তিপত্র</span>
                 </div>
-                <div class="app-item" onclick="openSheet('voiceSheet')">
+                <div class="app-item" onclick="openApp('voiceApp')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/headphone_1f3a7.png"></div>
                     <span class="app-label">ভয়েস নোট</span>
                 </div>
-                <div class="app-item" onclick="openSheet('fogSheet'); initFog();">
+                <div class="app-item" onclick="openApp('fogApp'); initFog();">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png"></div>
                     <span class="app-label">চিঠি</span>
                 </div>
-                <div class="app-item" onclick="openSheet('runawaySheet'); resetRunaway();">
+                <div class="app-item" onclick="openApp('runawayApp'); resetRunaway();">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/face-holding-back-tears_1f979.png"></div>
                     <span class="app-label">মিস করো?</span>
                 </div>
             </div>
             <div class="app-row">
-                <div class="app-item" onclick="openSheet('dateSheet')">
+                <div class="app-item" onclick="openApp('dateApp')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/clinking-glasses_1f942.png"></div>
                     <span class="app-label">ডেট স্পিনার</span>
                 </div>
-                <div class="app-item" onclick="openSheet('giftSheet')">
+                <div class="app-item" onclick="openApp('giftApp')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png"></div>
                     <span class="app-label">উপহার</span>
                 </div>
-                <div class="app-item" onclick="openSheet('meterSheet')">
+                <div class="app-item" onclick="openApp('meterApp')">
                     <div class="app-icon"><img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png"></div>
                     <span class="app-label">লাভ মিটার</span>
                 </div>
@@ -259,120 +342,87 @@
         </div>
     </div>
 
-    <!-- ===== Modals (Same as before but responsive) ===== -->
-    
-    <!-- Contract -->
-    <div class="ios-sheet-overlay" id="contractSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">চুক্তিপত্র <img src="https://em-content.zobj.net/source/apple/391/pen_1f58a-fe0f.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('contractSheet')">✖</button>
+    <!-- ===== Full Screen Zoom-In Apps ===== -->
+
+    <!-- Contract App -->
+    <div class="ios-app-screen" id="contractApp">
+        <div class="app-header"><div class="app-title">চুক্তিপত্র <img src="https://em-content.zobj.net/source/apple/391/pen_1f58a-fe0f.png" class="ios-emoji"></div></div>
+        <div class="contract-paper">
+            <div class="contract-title">ভালোবাসার চুক্তি</div>
+            <div class="contract-rules">
+                আমি, <b>জ্যোতি</b>, মেনে নিচ্ছি যে:<br><br>
+                ১. আমাকে স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
+                ২. আমি যত রাগই করি, আমাকেই মানাতে হবে।<br>
+                ৩. আমরা একে অপরের হাত সবসময় ধরে রাখবো।<br>
             </div>
-            <div class="contract-paper">
-                <div class="contract-title">ভালোবাসার চুক্তি</div>
-                <div class="contract-rules">
-                    আমি, <b>জ্যোতি</b>, মেনে নিচ্ছি যে:<br><br>
-                    ১. আমাকে স্পেশাল ফিল করানোর দায়িত্ব আমার ভালোবাসার মানুষের।<br>
-                    ২. আমি যত রাগই করি, আমাকেই মানাতে হবে।<br>
-                    ৩. আমরা একে অপরের হাত সবসময় ধরে রাখবো।<br>
-                </div>
-                <button class="action-btn" id="agreeBtn" onclick="signContract()" style="background:#ff6b81; color:#fff; border:none;">আমি রাজি ❤️</button>
-            </div>
+            <button class="action-btn" id="agreeBtn" onclick="signContract()" style="background:#ff6b81; border:none;">আমি রাজি ❤️</button>
         </div>
+        <!-- Swipe up to close -->
+        <div class="home-indicator-area" onclick="closeApp('contractApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Voice Note -->
-    <div class="ios-sheet-overlay" id="voiceSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">ভয়েস মেসেজ <img src="https://em-content.zobj.net/source/apple/391/microphone_1f3a4.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('voiceSheet')">✖</button>
-            </div>
-            <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:20px; text-align:center;">
-                <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width:50px; margin-bottom:15px;">
-                <audio controls id="secretAudio" style="width:100%; height:40px;"><source src="voice_message.mp3" type="audio/mpeg"></audio>
-            </div>
+    <!-- Voice Note App -->
+    <div class="ios-app-screen" id="voiceApp">
+        <div class="app-header"><div class="app-title">ভয়েস মেসেজ <img src="https://em-content.zobj.net/source/apple/391/microphone_1f3a4.png" class="ios-emoji"></div></div>
+        <div class="audio-player-container">
+            <img src="https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png" style="width:60px;">
+            <p style="color:#ddd;">প্লে বাটনে চাপ দাও...</p>
+            <audio controls id="secretAudio"><source src="voice_message.mp3" type="audio/mpeg"></audio>
         </div>
+        <div class="home-indicator-area" onclick="closeApp('voiceApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Fog Wipe -->
-    <div class="ios-sheet-overlay" id="fogSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">চিঠি <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('fogSheet')">✖</button>
-            </div>
-            <div class="fog-container">
-                <div class="secret-letter">আমার প্রিয় জ্যোতি,<br><br>তুমি আমার জীবনের আলো। আমি তোমাকে অনেক ভালোবাসি! ❤️</div>
-                <canvas id="fogCanvas"></canvas>
-            </div>
+    <!-- Fog App -->
+    <div class="ios-app-screen" id="fogApp">
+        <div class="app-header"><div class="app-title">চিঠি <img src="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" class="ios-emoji"></div></div>
+        <div class="fog-container">
+            <div class="secret-letter">আমার প্রিয় জ্যোতি,<br><br>তুমি আমার জীবনের আলো। আমি তোমাকে অনেক ভালোবাসি! ❤️</div>
+            <canvas id="fogCanvas"></canvas>
         </div>
+        <div class="home-indicator-area" onclick="closeApp('fogApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Runaway -->
-    <div class="ios-sheet-overlay" id="runawaySheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">সত্যি বলবে! <img src="https://em-content.zobj.net/source/apple/391/eyes_1f440.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('runawaySheet')">✖</button>
-            </div>
-            <p style="text-align:center; margin-bottom:10px;">তুমি কি আমাকে মিস করো?</p>
-            <div class="runaway-container" id="chaseArea">
-                <button class="chase-btn" id="runBtn" onmouseover="dodgeButton()" ontouchstart="dodgeButton()" onclick="caughtButton()">হ্যাঁ, অনেক! 🥺</button>
-            </div>
-            <p id="catchResult" style="color:#00e676; text-align:center; margin-top:15px; font-weight:bold; display:none;">আমিও অনেক মিস করি! ❤️</p>
+    <!-- Runaway App -->
+    <div class="ios-app-screen" id="runawayApp">
+        <div class="app-header"><div class="app-title">সত্যি বলবে! <img src="https://em-content.zobj.net/source/apple/391/eyes_1f440.png" class="ios-emoji"></div></div>
+        <p style="text-align:center; margin-bottom:15px; font-size:1.2rem;">তুমি কি আমাকে মিস করো?</p>
+        <div class="runaway-container" id="chaseArea">
+            <button class="chase-btn" id="runBtn" onmouseover="dodgeButton()" ontouchstart="dodgeButton()" onclick="caughtButton()">হ্যাঁ, অনেক! 🥺</button>
         </div>
+        <p id="catchResult" style="color:#00e676; text-align:center; margin-top:20px; font-weight:bold; display:none; font-size:1.4rem;">আমিও অনেক মিস করি! ❤️</p>
+        <div class="home-indicator-area" onclick="closeApp('runawayApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Date Spinner -->
-    <div class="ios-sheet-overlay" id="dateSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">ডেট স্পিনার 🎲</div>
-                <button class="sheet-close" onclick="closeSheet('dateSheet')">✖</button>
-            </div>
-            <div class="slot-machine" id="slotText">স্পিন করতে ট্যাপ করো!</div>
-            <button class="action-btn" id="spinBtn" onclick="startSpinning()">স্পিন করো</button>
-        </div>
+    <!-- Date Spinner App -->
+    <div class="ios-app-screen" id="dateApp">
+        <div class="app-header"><div class="app-title">ডেট স্পিনার 🎲</div></div>
+        <div class="slot-machine" id="slotText">স্পিন করতে ট্যাপ করো!</div>
+        <button class="action-btn" id="spinBtn" onclick="startSpinning()">স্পিন করো</button>
+        <div class="home-indicator-area" onclick="closeApp('dateApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Gift -->
-    <div class="ios-sheet-overlay" id="giftSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">উপহার <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('giftSheet')">✖</button>
-            </div>
-            <div style="text-align: center; background:rgba(255,255,255,0.05); padding:20px; border-radius:20px;">
-                <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 120px; cursor: pointer; transition: 0.3s; margin-bottom:10px;" onclick="openGift()">
-                <p id="giftText" style="color: #ccc;">বক্সে ট্যাপ করো!</p>
-                <div id="hiddenGift" style="display: none; margin-top: 10px;">
-                    <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 60px; margin-bottom: 5px;">
-                    <p style="color: #ff9a9e; font-size: 1.5rem; font-weight: 700;">অনেক ভালোবাসা! ❤️</p>
-                </div>
+    <!-- Gift App -->
+    <div class="ios-app-screen" id="giftApp">
+        <div class="app-header"><div class="app-title">উপহার <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" class="ios-emoji"></div></div>
+        <div style="text-align: center; background:rgba(255,255,255,0.05); padding:30px; border-radius:20px;">
+            <img src="https://em-content.zobj.net/source/apple/391/wrapped-gift_1f381.png" id="giftImg" style="width: 140px; cursor: pointer; transition: 0.3s; margin-bottom:15px;" onclick="openGift()">
+            <p id="giftText" style="color: #ccc; font-size:1.2rem;">বক্সে ট্যাপ করো!</p>
+            <div id="hiddenGift" style="display: none; margin-top: 15px;">
+                <img src="https://em-content.zobj.net/source/apple/391/smiling-face-with-hearts_1f970.png" style="width: 80px; margin-bottom: 10px;">
+                <p style="color: #ff9a9e; font-size: 1.8rem; font-weight: 700;">অনেক ভালোবাসা! ❤️</p>
             </div>
         </div>
+        <div class="home-indicator-area" onclick="closeApp('giftApp')"><div class="home-indicator"></div></div>
     </div>
 
-    <!-- Love Meter -->
-    <div class="ios-sheet-overlay" id="meterSheet">
-        <div class="ios-sheet ios-glass-dark">
-            <div class="dock-indicator"></div>
-            <div class="sheet-header">
-                <div class="sheet-title">লাভ মিটার <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-emoji"></div>
-                <button class="sheet-close" onclick="closeSheet('meterSheet')">✖</button>
-            </div>
-            <div style="font-size: 3.5rem; color: #ff9a9e; font-weight: 700; text-align: center; font-family: 'Outfit';" id="meterValue">0%</div>
-            <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 15px 0; height: 20px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 30px; transition: 0.1s;" id="meterFill"></div></div>
-            <button class="action-btn" id="calcLoveBtn" onclick="calculateLove()">হিসাব করো</button>
-            <div id="loveResult" style="display: none; text-align: center; margin-top: 15px; color: #00e676; font-size: 1.2rem; font-weight: 700;">ভালোবাসা অসীম! ♾️</div>
-        </div>
+    <!-- Love Meter App -->
+    <div class="ios-app-screen" id="meterApp">
+        <div class="app-header"><div class="app-title">লাভ মিটার <img src="https://em-content.zobj.net/source/apple/391/two-hearts_1f495.png" class="ios-emoji"></div></div>
+        <div style="font-size: 4rem; color: #ff9a9e; font-weight: 700; text-align: center; font-family: 'Outfit';" id="meterValue">0%</div>
+        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 30px 0; height: 30px;"><div style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e, #d6336c); border-radius: 30px; transition: 0.1s;" id="meterFill"></div></div>
+        <button class="action-btn" id="calcLoveBtn" onclick="calculateLove()">হিসাব করো</button>
+        <div id="loveResult" style="display: none; text-align: center; margin-top: 25px; color: #00e676; font-size: 1.4rem; font-weight: 700;">ভালোবাসা অসীম! ♾️</div>
+        <div class="home-indicator-area" onclick="closeApp('meterApp')"><div class="home-indicator"></div></div>
     </div>
 
 </div>
@@ -380,10 +430,12 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-    // System Clock
+    // Live Clock for Status Bar & Lockscreen
     setInterval(() => {
         const now = new Date();
-        document.getElementById('clockTime').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('clockTime').innerText = timeStr;
+        document.getElementById('sbTime').innerText = timeStr;
         document.getElementById('clockDate').innerText = now.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'});
     }, 1000);
 
@@ -392,26 +444,29 @@
     const msg = document.getElementById('unlock-msg');
     const scanner = document.getElementById('fpScanner');
     const bgMusic = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicToggle');
     
     function startScan() {
-        msg.innerText = "Scanning Biometrics..."; msg.style.color = "#00ffcc";
+        msg.innerText = "Scanning..."; msg.style.color = "#00ffcc";
         scanner.parentElement.classList.add('scanning');
         
         scanTimer = setTimeout(() => {
             scanner.parentElement.classList.remove('scanning');
             msg.innerHTML = "Unlocked <img src='https://em-content.zobj.net/source/apple/391/check-mark-button_2705.png' class='ios-emoji'>";
             msg.classList.add('success-text');
-            bgMusic.play().catch(()=>{});
-            musicPlaying = true; musicBtn.style.display = 'flex'; musicBtn.classList.add('playing');
+            
+            toggleMusic(); // Play music & start dynamic island wave
             
             setTimeout(() => {
                 document.getElementById('lock-screen').style.opacity = '0';
                 document.getElementById('lock-screen').style.transform = 'scale(1.1)';
+                
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('dashboard').classList.add('show');
                     typeWriter(); startLoveTimer();
+                    
+                    // Show Fake Notification after 5 seconds
+                    setTimeout(() => { document.getElementById('pushNotif').classList.add('show'); }, 5000);
                 }, 600);
             }, 1000);
         }, 2000);
@@ -421,16 +476,37 @@
         clearTimeout(scanTimer);
         if(!msg.classList.contains('success-text')) {
             scanner.parentElement.classList.remove('scanning');
-            msg.innerText = "Hold Finger to Unlock"; msg.style.color = "#ddd";
+            msg.innerText = "Hold Finger to Unlock"; msg.style.color = "#fff";
         }
     }
 
+    // Music & Dynamic Island Control
     function toggleMusic() {
-        if(musicPlaying) { bgMusic.pause(); musicBtn.classList.remove('playing'); } 
-        else { bgMusic.play(); musicBtn.classList.add('playing'); }
+        const wave = document.getElementById('musicWave');
+        if(musicPlaying) { 
+            bgMusic.pause(); wave.style.opacity = '0';
+            document.getElementById('ccMusicText').innerText = "Play Music";
+        } else { 
+            bgMusic.play(); wave.style.opacity = '1';
+            document.getElementById('ccMusicText').innerText = "Pause Music";
+        }
         musicPlaying = !musicPlaying;
     }
 
+    // Notification Close
+    function closeNotif() { document.getElementById('pushNotif').classList.remove('show'); }
+
+    // Control Center Toggle
+    function toggleControlCenter() {
+        const cc = document.getElementById('controlCenter');
+        cc.classList.toggle('active');
+    }
+
+    // Camera Lockscreen Shortcut
+    function showHiddenCam() { document.getElementById('hidden-camera').style.display = 'flex'; }
+    function hideHiddenCam() { document.getElementById('hidden-camera').style.display = 'none'; }
+
+    // Typewriter Greeting
     const text = "হ্যালো, জ্যোতি "; let i = 0;
     function typeWriter() {
         if (i < text.length) { document.getElementById("typewriterText").innerHTML += text.charAt(i); i++; setTimeout(typeWriter, 120); } 
@@ -449,16 +525,21 @@
         }, 1000);
     }
 
-    // Modal Control
-    function openSheet(id) { document.getElementById(id).classList.add('active'); }
-    function closeSheet(id) { document.getElementById(id).classList.remove('active'); if(id === 'voiceSheet') document.getElementById('secretAudio').pause(); if(id === 'meterSheet') resetLoveMeter(); }
-
-    function signContract() {
-        const btn = document.getElementById('agreeBtn'); btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖"; btn.style.background = "#00e676";
-        confetti({ particleCount: 150, spread: 80, origin: { y: 0.8 } }); setTimeout(() => { closeSheet('contractSheet'); }, 2000);
+    // iOS App Zoom Open/Close (Swipe up to home)
+    function openApp(id) { document.getElementById(id).classList.add('active'); }
+    function closeApp(id) { 
+        document.getElementById(id).classList.remove('active'); 
+        if(id === 'voiceApp') document.getElementById('secretAudio').pause(); 
+        if(id === 'meterApp') resetLoveMeter(); 
     }
 
-    // Responsive Fog Canvas Setup
+    // Contract
+    function signContract() {
+        const btn = document.getElementById('agreeBtn'); btn.innerHTML = "চুক্তি সম্পন্ন হয়েছে! 💖"; btn.style.background = "#00e676";
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.8 } }); setTimeout(() => { closeApp('contractApp'); }, 2000);
+    }
+
+    // Fog Canvas
     function initFog() {
         const canvas = document.getElementById('fogCanvas');
         const container = document.querySelector('.fog-container');
@@ -479,7 +560,7 @@
         canvas.addEventListener('touchmove', wipe); canvas.addEventListener('touchend', () => isDrawing = false);
     }
 
-    // Runaway Button
+    // Runaway
     let dodgeCount = 0;
     function dodgeButton() {
         if(dodgeCount < 4) {
@@ -499,7 +580,7 @@
         if(spinning) return; spinning = true; const slot = document.getElementById('slotText'); let spins = 0;
         const spinInterval = setInterval(() => {
             slot.innerText = dateIdeas[Math.floor(Math.random() * dateIdeas.length)]; spins++;
-            if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: clamp(1.2rem, 4vw, 1.5rem); color:#ff9a9e;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 80, origin: { y: 0.8 } }); }
+            if(spins > 20) { clearInterval(spinInterval); slot.innerHTML = `<span style="font-size: 1.8rem; color:#ff9a9e;">${dateIdeas[Math.floor(Math.random() * dateIdeas.length)]}</span>`; spinning = false; confetti({ particleCount: 80, origin: { y: 0.8 } }); }
         }, 80);
     }
 
@@ -519,7 +600,7 @@
         }, 25);
     }
 
-    // Magic FX (Roses & Lanterns)
+    // Magic FX
     function triggerRoseRain() {
         const container = document.getElementById('fxContainer');
         for(let i=0; i<20; i++) {
